@@ -79,7 +79,11 @@ def call(body) {
             stage('init') {
                 steps {
                     script {
-                        pipelineSettings.gitSettings = new GitSettings(this, '')
+                        pipelineSettings.gitSettings = new GitSettings(
+                            this,
+                            !jenkinsfile.semver
+                                ? ''
+                                : "${jenkinsfile.semver.gitVersion}")
                         pipelineSettings.gitSettings.create()
                     }
                 }
