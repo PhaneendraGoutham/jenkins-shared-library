@@ -21,7 +21,7 @@ abstract class Settings implements Serializable {
 
         steps.echo "==== START: ${classObj.name}"
         for (Field field in classObj.declaredFields) {
-            steps.echo "${field.name}: ${classObj[field.name]}"
+            steps.echo "${field.name}: ${classObj.getDeclaredField(field.name).toString()}"
         }
 
         steps.echo "==== FINISH: ${classObj.name}"
