@@ -16,13 +16,12 @@ abstract class Settings implements Serializable {
 
     void log() {
         def classObj = this.getClass()
-        steps.echo "${classObj.name}"
 
-        steps.echo "==== ${classObj.class}"
-        for (def property in classObj.getProperties()) {
-            steps.echo "${property.key}: ${property.value}"
+        steps.echo "==== START: ${classObj.name}"
+        for (def property in classObj.declaredFields) {
+            steps.echo "${property.name}:"
         }
 
-        steps.echo "==== ${classObj.class}"
+        steps.echo "==== FINISH: ${classObj.name}"
     }
 }
