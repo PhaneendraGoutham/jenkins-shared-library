@@ -20,20 +20,20 @@ class VcsRestTest extends GroovyTestCase {
         vcsRest.repository = repository
     }
 
-    void testInstance() {
-        println "testInstance"
+    void test_instance() {
+        println "test_instance"
         assertEquals(vcsRest.getInstance(), VcsRest.getInstance())
     }
 
-    void testGetCommitsUri() {
-        println "testGetCommitsUri"
+    void test_get_commits_uri() {
+        println "test_get_commits_uri"
         String commitsUri = VcsRest.instance.getCommitsUri()
         String expected = "${scheme}://api.${host}/repos/${project}/${repository}/commits"
         assertToString(commitsUri, expected)
     }
 
-    void testGetStatusUri() {
-        println "testGetStatusUri"
+    void test_get_status_uri() {
+        println "test_get_status_uri"
         String statusUri = VcsRest.instance.getStatusUri()
         String expected = "${scheme}://api.${host}/repos/${project}/${repository}/statuses"
         assertToString(statusUri, expected)
