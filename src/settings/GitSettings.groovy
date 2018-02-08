@@ -4,7 +4,7 @@ import constants.PipelineConstants
 import constants.ToolConstants
 
 class GitSettings extends Settings {
-    String assembly
+    private String assembly
 
     GitSettings(def steps,
                 String assembly = '') {
