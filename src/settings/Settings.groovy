@@ -14,7 +14,7 @@ abstract class Settings implements Serializable {
 
     protected abstract void init()
 
-    private void log() {
+    void log() {
         def classObj = this.getClass()
         steps.echo "${classObj.name}"
 
