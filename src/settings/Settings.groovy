@@ -1,5 +1,7 @@
 package settings
 
+import java.lang.reflect.Field
+
 abstract class Settings implements Serializable {
     def steps
 
@@ -18,8 +20,8 @@ abstract class Settings implements Serializable {
         def classObj = this.getClass()
 
         steps.echo "==== START: ${classObj.name}"
-        for (def property in classObj.declaredFields) {
-            steps.echo "${property.name}:"
+        for (Field field in classObj.declaredFields) {
+            steps.echo "${field}"
         }
 
         steps.echo "==== FINISH: ${classObj.name}"
