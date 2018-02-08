@@ -1,7 +1,5 @@
 package settings
 
-import java.lang.reflect.Field
-
 abstract class Settings implements Serializable {
     def steps
 
@@ -17,18 +15,19 @@ abstract class Settings implements Serializable {
     protected abstract void init()
 
     void log() {
-        def classObj = this.getClass()
+        steps.echo "==== START: ${this.class.name}"
 
-        steps.echo "==== START: ${classObj.name}"
-
-        def dmap = this.class.declaredFields.findAll { !it.synthetic }.collectEntries {
-            [ (it.name):this."$it.name" ]
+        def fields = this.class
+            .declaredFields
+            .findAll { !it.synthetic && !it.name.contains('cps') }
+            .collectEntries {
+            [(it.name): this."$it.name"]
         }
 
-        for (def entry in dmap) {
-            steps.echo "${entry.key}: ${entry.value}"
+        for (def field in fields) {
+            steps.echo "${field.key}: ${field.value}"
         }
 
-        steps.echo "==== FINISH: ${classObj.name}"
+        steps.echo "==== FINISH: ${this.class.name}"
     }
 }
