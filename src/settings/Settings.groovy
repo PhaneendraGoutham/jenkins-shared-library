@@ -19,7 +19,7 @@ abstract class Settings implements Serializable {
 
         def fields = this.class
             .declaredFields
-            .findAll { !it.synthetic && !it.name.contains('cps') }
+            .findAll { !it.synthetic && !it.name.startsWith('__') }
             .collectEntries {
             [(it.name): this."$it.name"]
         }
