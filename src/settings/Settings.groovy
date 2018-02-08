@@ -20,8 +20,13 @@ abstract class Settings implements Serializable {
         def classObj = this.getClass()
 
         steps.echo "==== START: ${classObj.name}"
-        for (Field field in classObj.declaredFields) {
-            steps.echo "${field.name}: ${classObj.getDeclaredField(field.name).toString()}"
+
+        def dmap = this.class.declaredFields.findAll { !it.synthetic }.collectEntries {
+            [ (it.name):this."$it.name" ]
+        }
+
+        for (def entry in dmap) {
+            steps.echo "${entry.key}: ${entry.value}"
         }
 
         steps.echo "==== FINISH: ${classObj.name}"
