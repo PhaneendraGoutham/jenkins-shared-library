@@ -10,8 +10,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.cloudbees:groovy-cps:1.22" level="project" />
-    <orderEntry type="library" name="com.lesfurets:jenkins-pipeline-unit:1.1" level="project" />
     <orderEntry type="library" name="commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="org.codehaus.groovy:groovy-all:2.4.13" level="project" />
   </component>
 </module>
