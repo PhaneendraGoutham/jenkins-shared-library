@@ -16,6 +16,7 @@ abstract class Settings implements Serializable {
 
     private void log() {
         def classObj = this.getClass()
+        steps.echo "${classObj.name}"
 
         steps.echo "==== ${classObj.class}"
         for (def property in classObj.getProperties()) {
