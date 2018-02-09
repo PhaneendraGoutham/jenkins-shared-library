@@ -1,0 +1,13 @@
+package steps.httprequest
+
+enum HttpRequestContentType {
+    NOT_SET,
+    TEXT_HTML,
+    TEXT_PLAIN,
+    APPLICATION_FORM,
+    APPLICATION_JSON,
+    APPLICATION_JSON_UTF8,
+    APPLICATION_TAR,
+    APPLICATION_ZIP,
+    APPLICATION_OCTETSTREAM
+}

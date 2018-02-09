@@ -1,10 +1,10 @@
 package settings
 
 abstract class Settings implements Serializable {
-    def steps
+    def _steps
 
     Settings(def steps) {
-        this.steps = steps
+        _steps = steps
     }
 
     void create() {
@@ -15,7 +15,7 @@ abstract class Settings implements Serializable {
     protected abstract void init()
 
     void log() {
-        steps.echo "==== START: ${this.class.name}"
+        _steps.echo "==== START: ${this.class.name}"
 
         def fields = this.class
             .declaredFields
@@ -25,9 +25,9 @@ abstract class Settings implements Serializable {
         }
 
         for (def field in fields) {
-            steps.echo "${field.key}: ${field.value}"
+            _steps.echo "${field.key}: ${field.value}"
         }
 
-        steps.echo "==== FINISH: ${this.class.name}"
+        _steps.echo "==== FINISH: ${this.class.name}"
     }
 }

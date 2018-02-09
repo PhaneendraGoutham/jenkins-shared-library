@@ -1,5 +1,6 @@
 import constants.PipelineConstants
-import settings.GitSettings
+import settings.git.GitSettings
+import settings.vcs.VcsSettings
 
 /**
  * The call(body) method in any file in ~git/vars is exposed as a method with the same name as the file.
@@ -85,6 +86,41 @@ def call(body) {
                                 ? ''
                                 : "${jenkinsfile.semver.gitVersion}")
                         pipelineSettings.gitSettings.create()
+                    }
+                }
+                post {
+                    failure {
+                        script {
+                            currentBuild.result = PipelineConstants.FAILURE
+                        }
+                    }
+                    success {
+                        script {
+                            currentBuild.result = PipelineConstants.SUCCESS
+                        }
+                    }
+                }
+            }
+
+            stage('vcs notify') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS
+                    }
+                }
+                steps {
+                    script {
+                        pipelineSettings.vcsSettings = new VcsSettings(
+                            this,
+                            "${jenkinsfile.vcs.svc}",
+                            "${jenkinsfile.vcs.scheme}",
+                            "${jenkinsfile.vcs.host}",
+                            "${jenkinsfile.vcs.project}",
+                            "${pipelineSettings.gitSettings.repository}",
+                            "${env.VCS_LOGIN_USR}",
+                            "${env.VCS_LOGIN_PSW}"
+                        )
+                        pipelineSettings.vcsSettings.notify(2)
                     }
                 }
                 post {

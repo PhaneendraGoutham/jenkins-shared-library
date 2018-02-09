@@ -1,15 +1,16 @@
-package settings
+package settings.git
 
 import constants.PipelineConstants
 import constants.ToolConstants
+import settings.Settings
 
 class GitSettings extends Settings {
-    private String assembly
+    private String _assembly
 
     GitSettings(def steps,
                 String assembly = '') {
         super(steps)
-        this.assembly = assembly
+        _assembly = assembly
     }
 
     String branch
@@ -28,7 +29,7 @@ class GitSettings extends Settings {
     }
 
     void setBranch() {
-        branch = "${steps.BRANCH_NAME}".contains('/') ? "${steps.BRANCH_NAME}".split('/')[0] : "${steps.BRANCH_NAME}"
+        branch = "${_steps.BRANCH_NAME}".contains('/') ? "${_steps.BRANCH_NAME}".split('/')[0] : "${_steps.BRANCH_NAME}"
         println "branch: ${branch}"
     }
 
@@ -36,12 +37,12 @@ class GitSettings extends Settings {
         String tool = ToolConstants.GIT
         String args = 'rev-parse HEAD'
 
-        def stdout = steps.bat(returnStdout: true, script: "${tool} ${args}").trim().split("\\n")
+        def stdout = _steps.bat(returnStdout: true, script: "${tool} ${args}").trim().split("\\n")
         commit = stdout.last()
     }
 
     void setRepository() {
-        url = steps.scm.getUserRemoteConfigs()[0].getUrl()
+        url = _steps.scm.getUserRemoteConfigs()[0].getUrl()
         repository = url.split('/').last().replaceAll('.git', '')
     }
 
@@ -51,18 +52,18 @@ class GitSettings extends Settings {
         def args = sprintf(
             '/output json /verbosity error /updateassemblyinfo %1$s > %2$s',
             [
-                assembly,
+                _assembly,
                 output
             ])
 
         try {
-            steps.bat "${tool} ${args}"
-            gitVersion = steps.readJSON file: "${output}"
-            version = "${steps.BRANCH_NAME}" == 'master' ? gitVersion.MajorMinorPatch : gitVersion.SemVer
-            steps.currentBuild.displayName = version
+            _steps.bat "${tool} ${args}"
+            gitVersion = _steps.readJSON file: "${output}"
+            version = "${_steps.BRANCH_NAME}" == 'master' ? gitVersion.MajorMinorPatch : gitVersion.SemVer
+            _steps.currentBuild.displayName = version
         }
         catch (err) {
-            steps.currentBuild.result = PipelineConstants.FAILURE
+            _steps.currentBuild.result = PipelineConstants.FAILURE
             throw err
         }
     }
