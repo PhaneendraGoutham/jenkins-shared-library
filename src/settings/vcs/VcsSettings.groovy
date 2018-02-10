@@ -7,7 +7,7 @@ import steps.httprequest.HttpRequestContentType
 import steps.httprequest.HttpRequestResponseHandle
 
 class VcsSettings extends Settings {
-    private final String _label = "Status updated by Jenkins Automation Server."
+    private final String _label = "continuous-integration/jenkins"
 
     private String _id
     private String _svc
