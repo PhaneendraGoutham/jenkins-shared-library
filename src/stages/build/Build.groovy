@@ -2,20 +2,22 @@ package stages.build
 
 abstract class Build implements Serializable {
     def _steps
+    String _tool
 
-    Build(def steps) {
+    Build(def steps,
+          String tool) {
         _steps = steps
+        _tool = tool
     }
 
-    protected String tool
     protected String args
 
-    protected abstract def initialize()
+    abstract void setSwitchValues(String... values)
 
     def compile(String item) {
         try {
             _steps.bat "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
-            _steps.bat "${tool} ${item} ${args}"
+            _steps.bat "${_tool} ${item} ${args}"
         } catch (error) {
             throw error
         }

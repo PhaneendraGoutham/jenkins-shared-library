@@ -1,90 +1,119 @@
 package settings.vcs
 
+import groovy.json.JsonOutput
 import settings.Settings
-import settings.vcs.rest.VcsRest
-import settings.vcs.rest.VcsService
-import settings.vcs.states.GitHubState
-import settings.vcs.states.StashState
+import steps.httprequest.HttpRequest
+import steps.httprequest.HttpRequestContentType
+import steps.httprequest.HttpRequestResponseHandle
 
 class VcsSettings extends Settings {
     private final String _label = "Status updated by Jenkins Automation Server."
 
+    private String _id
+    private String _svc
     private VcsService _vcsService
     private String _scheme
     private String _host
     private String _project
     private String _repository
-    private String _username
-    private String _password
 
-    private def _data
+    private def _requestBody
 
     VcsSettings(def steps,
+                String id,
                 String svc,
                 String scheme,
                 String host,
                 String project,
-                String repository,
-                String username,
-                String password) {
+                String repository) {
         super(steps)
-        VcsService vcsService = svc.toUpperCase()
-        _vcsService = vcsService
+        _id = id
+        _svc = "${svc}".toUpperCase()
+        _vcsService = "${_svc}" as VcsService
         _scheme = scheme
         _host = host
         _project = project
         _repository = repository
-        _username = username
-        _password = password
     }
 
-    static VcsRest vcsRest = VcsRest.getInstance()
+    String commitsUri
+    String statusUri
 
     @Override
     protected void init() {
-        vcsRest.vcsService = _vcsService
-        vcsRest.scheme = _scheme
-        vcsRest.host = _host
-        vcsRest.project = _project
-        vcsRest.repository = _repository
+        setCommitsUri()
+        setStatusUri()
+    }
+
+    void setCommitsUri() {
+        switch (_vcsService) {
+            case VcsService.GITHUB:
+                commitsUri = "${_scheme}://api.${_host}/repos/${_project}/${_repository}/commits"
+                break
+            case VcsService.STASH:
+                commitsUri = "${_scheme}://${_host}/rest/api/1.0/projects/${_project}/repos/${_repository}/compare/commits"
+                break
+        }
+    }
+
+    void setStatusUri() {
+        switch (_vcsService) {
+            case VcsService.GITHUB:
+                statusUri = "${_scheme}://api.${_host}/repos/${_project}/${_repository}/statuses"
+                break
+            case VcsService.STASH:
+                statusUri = "${_scheme}://${_host}/rest/build-status/1.0/commits"
+                break
+        }
+
+        statusUri += "/${_steps.pipelineSettings.gitSettings.commit}"
     }
 
     void notify(int state) {
-        switch(_vcsService) {
+        switch (_vcsService) {
             case VcsService.GITHUB:
-                populateGitHubData(GitHubState.values()[state])
+                populateGitHubRequestBody(GitHubState.values()[state])
                 break
             case VcsService.STASH:
-                populateStashData(StashState.values()[state])
+                populateStashRequestBody(StashState.values()[state])
                 break
         }
 
         post()
     }
 
-    private void populateGitHubData(GitHubState gitHubState) {
-        _data = sprintf(
-            '{\\"state\\" : \\"%1$s\\", \\"target_url\\" : \\"%2$s\\", \\"description\\" : \\"%3$s\\", \\"context\\" : \\"%4$s\\"}',
+    private void populateGitHubRequestBody(GitHubState gitHubState) {
+        _requestBody = JsonOutput.toJson(
             [
-                gitHubState.toString().toLowerCase(),
-                "${vcsRest.getStatusUri()}",
-                "${steps.pipelineSettings.gitSettings.version}",
-                "${_label}"
-            ])
+                state      : gitHubState.toString().toLowerCase(),
+                target_url : "${_steps.env.BUILD_URL}".replace("%", "%%"),
+                description: "${_steps.pipelineSettings.gitSettings.version}",
+                context    : "${_label}"
+            ]
+        )
     }
 
-    private void populateStashData(StashState stashState) {
-        _data = sprintf(
-            '{\\"state\\" : \\"%1$s\\", \\"key\\" : \\"%2$s\\", \\"name\\" : \\"%2$s\\", \\"url\\" : \\"%3$s\\", \\"description\\" : \\"%4$s\\"}',
+    private void populateStashRequestBody(StashState stashState) {
+        _requestBody = JsonOutput.toJson(
             [
-                stashState,
-                "${steps.pipelineSettings.gitSettings.version}",
-                "${vcsRest.getStatusUri()}",
-                "${_label}"
-            ])
+                state      : stashState,
+                key        : "${_steps.pipelineSettings.gitSettings.version}",
+                name       : "${_steps.pipelineSettings.gitSettings.version}",
+                url        : "${_steps.env.BUILD_URL}".replace("%", "%%"),
+                description: "${_label}"
+            ]
+        )
     }
 
     private void post() {
-
+        new HttpRequest(
+            _steps,
+            _id
+        ).post(
+            HttpRequestContentType.APPLICATION_JSON,
+            HttpRequestResponseHandle.NONE,
+            _requestBody,
+            statusUri
+        )
     }
 }

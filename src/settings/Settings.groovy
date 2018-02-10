@@ -15,7 +15,7 @@ abstract class Settings implements Serializable {
     protected abstract void init()
 
     void log() {
-        _steps.echo "==== START: ${this.class.name}"
+        _steps.echo "== [Field Info] == ${this.class.name}"
 
         def fields = this.class
             .declaredFields
@@ -28,6 +28,6 @@ abstract class Settings implements Serializable {
             _steps.echo "${field.key}: ${field.value}"
         }
 
-        _steps.echo "==== FINISH: ${this.class.name}"
+        _steps.echo "=================="
     }
 }

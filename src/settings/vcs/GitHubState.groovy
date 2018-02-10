@@ -1,4 +1,4 @@
-package settings.vcs.states
+package settings.vcs
 
 enum GitHubState {
     SUCCESS,

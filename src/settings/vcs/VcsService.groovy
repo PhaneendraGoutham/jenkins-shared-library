@@ -1,4 +1,4 @@
-package settings.vcs.rest
+package settings.vcs
 
 enum VcsService {
     GITHUB,

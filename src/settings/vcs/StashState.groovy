@@ -1,4 +1,4 @@
-package stages.vcs.states
+package settings.vcs
 
 enum StashState {
     SUCCESSFUL,

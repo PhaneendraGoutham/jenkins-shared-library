@@ -1,5 +1,7 @@
 import constants.PipelineConstants
+import settings.build.BuildSettings
 import settings.git.GitSettings
+import settings.nuget.NuGetSettings
 import settings.vcs.VcsSettings
 
 /**
@@ -102,7 +104,7 @@ def call(body) {
                 }
             }
 
-            stage('vcs notify') {
+            stage('notify(2)') {
                 when {
                     expression {
                         return currentBuild.result == PipelineConstants.SUCCESS
@@ -112,15 +114,51 @@ def call(body) {
                     script {
                         pipelineSettings.vcsSettings = new VcsSettings(
                             this,
+                            "${jenkinsfile.vcs.id}",
                             "${jenkinsfile.vcs.svc}",
                             "${jenkinsfile.vcs.scheme}",
                             "${jenkinsfile.vcs.host}",
                             "${jenkinsfile.vcs.project}",
-                            "${pipelineSettings.gitSettings.repository}",
-                            "${env.VCS_LOGIN_USR}",
-                            "${env.VCS_LOGIN_PSW}"
+                            "${pipelineSettings.gitSettings.repository}"
                         )
+                        pipelineSettings.vcsSettings.create()
                         pipelineSettings.vcsSettings.notify(2)
+                    }
+                }
+                post {
+                    failure {
+                        script {
+                            currentBuild.result = PipelineConstants.FAILURE
+                        }
+                    }
+                    success {
+                        script {
+                            currentBuild.result = PipelineConstants.SUCCESS
+                        }
+                    }
+                }
+            }
+
+            stage('build') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS
+                    }
+                }
+                steps {
+                    script {
+                        pipelineSettings.nuGetSettings = new NuGetSettings(
+                            this,
+                            "${jenkinsfile.build.restore.sources}"
+                        )
+                        pipelineSettings.nuGetSettings.create()
+
+                        pipelineSettings.buildSettings = new BuildSettings(
+                            this,
+                            jenkinsfile.build.projects
+                        )
+                        pipelineSettings.buildSettings.create()
+                        pipelineSettings.buildSettings.execute()
                     }
                 }
                 post {
@@ -141,6 +179,28 @@ def call(body) {
         post {
             always {
                 bat 'set > env.out'
+            }
+            // changed {
+            // }
+            success {
+                script {
+                    pipelineSettings.vcsSettings.notify(0)
+                }
+            }
+            unstable {
+                script {
+                    pipelineSettings.vcsSettings.notify(0)
+                }
+            }
+            failure {
+                script {
+                    pipelineSettings.vcsSettings.notify(1)
+                }
+            }
+            aborted {
+                script {
+                    pipelineSettings.vcsSettings.notify(1)
+                }
             }
         }
     }
