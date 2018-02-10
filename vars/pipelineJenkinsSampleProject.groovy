@@ -3,6 +3,7 @@ import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nuget.NuGetSettings
 import settings.vcs.VcsSettings
+import settings.workspace.WorkspaceSettings
 
 /**
  * The call(body) method in any file in ~git/vars is exposed as a method with the same name as the file.
@@ -15,7 +16,16 @@ def call(body) {
     body.delegate = jenkinsfile
     body()
 
+    pipelineSettings.workspaceSettings = new WorkspaceSettings(
+        this,
+        "${jenkinsfile.agent.node.workspace.drive}",
+        "${jenkinsfile.agent.node.workspace.root}",
+        "${jenkinsfile.agent.node.workspace.leaf}"
+    )
+    pipelineSettings.workspaceSettings.create()
+
     //region agent.node.workspace
+    /*
     def _checkoutRoot = "!"
     def _artifactRoot = "\$"
     def _nodeWorkspace = setWorkspace("${jenkinsfile.agent.node.workspace.drive}", "${_checkoutRoot}", "${jenkinsfile.agent.node.workspace.folder}")
@@ -27,13 +37,15 @@ def call(body) {
             "${_nodeWorkspaceBranchName}"
         ])
     def _artifactsDirectory = _nodeCustomWorkspace.replace("${_checkoutRoot}", "${_artifactRoot}")
+    */
     //endregion
 
     pipeline {
         agent {
             node {
                 label "${jenkinsfile.agent.node.label}"
-                customWorkspace "${_nodeCustomWorkspace}"
+                //customWorkspace "${_nodeCustomWorkspace}"
+                customWorkspace "${pipelineSettings.workspaceSettings.customWorkspace}"
             }
         }
 
