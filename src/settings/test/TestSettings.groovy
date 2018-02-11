@@ -24,7 +24,7 @@ class TestSettings extends Settings {
             testFramework.test()
             testResults.put(testFramework.name, testFramework.result)
         }
-        
+
         return true
     }
 

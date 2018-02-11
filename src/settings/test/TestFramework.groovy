@@ -102,7 +102,7 @@ class TestFramework implements Serializable {
                 continue
             }
 
-            if (option == '_result') {
+            if (option == 'result') {
                 _result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}\\${value}"
                 _options += sprintf(
                     ' --result="%1$s"',
