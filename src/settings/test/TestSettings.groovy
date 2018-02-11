@@ -23,7 +23,7 @@ class TestSettings extends Settings {
             String testTool = "${test.key}".toUpperCase()
             //TestTool _vcsService = "${testTool}" as TestTool
             TestFramework testFramework = new TestFramework(
-                this,
+                _steps,
                 "${testTool}" as TestTool,
                 test.value
             )
