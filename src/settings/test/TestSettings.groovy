@@ -19,7 +19,7 @@ class TestSettings extends Settings {
     }
 
     void test() {
-        for (def testFramework in testFrameworks) {
+        for (TestFramework testFramework in testFrameworks) {
             testFramework.test()
         }
     }
