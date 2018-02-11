@@ -103,9 +103,9 @@ class TestFramework implements Serializable {
             }
 
             if (option == '_result') {
-                _result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
+                _result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}\\${value}"
                 _options += sprintf(
-                    ' --_result="%1$s"',
+                    ' --result="%1$s"',
                     [
                         "${_result}"
                     ]

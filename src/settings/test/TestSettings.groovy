@@ -24,11 +24,7 @@ class TestSettings extends Settings {
             testFramework.test()
             testResults.put(testFramework.name, testFramework.result)
         }
-
-        boolean overallResult = testResults.each { name, result ->
-            _steps.echo "${name}: ${result}"
-        }
-
+        
         return true
     }
 
