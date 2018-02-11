@@ -61,6 +61,7 @@ class TestFramework implements Serializable {
                 break
             case TestTool.NUNIT:
                 if (_status == 0) {
+                    _steps.echo "testResultsPattern: ${_result}"
                     _steps.nunit debug: false,
                         failIfNoResults: false,
                         keepJUnitReports: true,
@@ -105,7 +106,7 @@ class TestFramework implements Serializable {
             }
 
             if (option == 'result') {
-                String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}"
+                String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}".toLowerCase()
                 File resultDirectory = new File("${pathname}")
                 resultDirectory.mkdirs()
                 _result = "${resultDirectory.getAbsolutePath()}\\${value}"
