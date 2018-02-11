@@ -189,6 +189,7 @@ def call(body) {
                         )
                         pipelineSettings.testSettings.create()
 
+                        /*
                         TEST_STATUS = NUnit.Test(
                             context: this,
                             configuration: "${params.Configuration}",
@@ -197,6 +198,7 @@ def call(body) {
                             result: "${config.test.nunit.result}",
                             where: "${config.test.nunit.where}"
                         )
+                        */
                     }
                 }
                 post {
