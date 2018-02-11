@@ -18,10 +18,15 @@ class TestSettings extends Settings {
         populate()
     }
 
+    void test() {
+        for (def testFramework in testFrameworks) {
+            testFramework.test()
+        }
+    }
+
     private void populate() {
         for (def test in _tests) {
             String testTool = "${test.key}".toUpperCase()
-            //TestTool _vcsService = "${testTool}" as TestTool
             TestFramework testFramework = new TestFramework(
                 _steps,
                 "${testTool}" as TestTool,

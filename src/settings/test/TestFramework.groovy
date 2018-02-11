@@ -6,6 +6,7 @@ class TestFramework implements Serializable {
     def _steps
     private TestTool _testTool
     private Map _testOptions
+    private String _basedir
 
     TestFramework(def steps,
                   TestTool testTool,
@@ -16,26 +17,26 @@ class TestFramework implements Serializable {
     }
 
     private String result
-    private TestOptions testOptions
+    private String options
     private String tool
 
     void init() {
+        _basedir = "${_steps.env.WORKSPACE}"
         switch (_testTool) {
             case TestTool.NUNIT:
                 tool = ToolConstants.NUNIT
-                for(def testOption in _testOptions) {
-                    _steps.echo "${testOption.key}: ${testOption.value}"
-                }
                 break
             default:
                 throw "Tool not defined for [${_testTool}]."
         }
+
+        constructOptions()
     }
 
     boolean test() {
         int status = 0
         try {
-            status = _steps.bat returnStatus: true, script: "${tool} ${_testOptions.options}"
+            status = _steps.bat returnStatus: true, script: "${tool} ${options}"
         } catch (error) {
             _steps.echo "${error}"
         } finally {
@@ -64,6 +65,74 @@ class TestFramework implements Serializable {
                 default:
                     throw "Tool not defined for [${_testTool}]."
             }
+        }
+    }
+
+    private void constructOptions() {
+        switch (_testTool) {
+            case TestTool.NUNIT:
+                options = getNUnitOptions()
+                break
+            default:
+                throw "Tool not defined for [${_testTool}]."
+        }
+    }
+
+    private String getNUnitOptions() {
+        options = ''
+        for (def testOption in _testOptions) {
+            String option = testOption.key
+            def value = testOption.value
+
+            if (option == 'assembly') {
+                def assembly = new FileNameFinder()
+                    .getFileNames("${_basedir}", "${value}", '')
+                    .find { true }
+                options += sprintf(
+                    '"%1$s"',
+                    [
+                        assembly
+                    ]
+                )
+                continue
+            }
+
+            if (option == 'config') {
+                options += sprintf(
+                    ' --config="%1$s"',
+                    [
+                        "${value}"
+                    ]
+                )
+                continue
+            }
+
+            if (option == 'result') {
+                options += sprintf(
+                    ' --result="%1$s"',
+                    [
+                        "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
+                    ]
+                )
+                continue
+            }
+
+            if (option == 'where') {
+                options += sprintf(
+                    ' --where=\"%1$s\"',
+                    [
+                        "${value}"
+                    ]
+                )
+                continue
+            }
+
+            if (option == 'is32Bit') {
+                options += ' --x86'
+                continue
+            }
+
+            _steps.echo "No option defined for [${option}] with value [${value}]."
         }
     }
 }

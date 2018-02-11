@@ -178,9 +178,6 @@ def call(body) {
                             jenkinsfile.test
                     }
                 }
-                environment {
-                    TEST_STATUS = 0
-                }
                 steps {
                     script {
                         pipelineSettings.testSettings = new TestSettings(
@@ -188,23 +185,17 @@ def call(body) {
                             jenkinsfile.test
                         )
                         pipelineSettings.testSettings.create()
-
-                        /*
-                        TEST_STATUS = NUnit.Test(
-                            context: this,
-                            configuration: "${params.Configuration}",
-                            assembly: "${config.test.nunit.assembly}",
-                            is32Bit: "${config.test.nunit.is32Bit}",
-                            result: "${config.test.nunit.result}",
-                            where: "${config.test.nunit.where}"
-                        )
-                        */
+                        pipelineSettings.testSettings.test()
                     }
                 }
                 post {
-                    always {
+                    failure {
                         script {
-                            //currentBuild.result = TEST_STATUS == 0 ? PipelineConstants.SUCCESS : PipelineConstants.FAILURE
+                            currentBuild.result = PipelineConstants.FAILURE
+                        }
+                    }
+                    success {
+                        script {
                             currentBuild.result = PipelineConstants.SUCCESS
                         }
                     }
