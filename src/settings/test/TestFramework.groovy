@@ -48,32 +48,30 @@ class TestFramework implements Serializable {
     }
 
     private void archive() {
-        /*
         _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}") {
-        }
-        */
-        switch (_testTool) {
-            case TestTool.JUNIT:
-                _steps.junit allowEmptyResults: true,
-                    healthScaleFactor: 1.0,
-                    keepLongStdio: true,
-                    testResults: "${_result}"
-                break
-            case TestTool.NUNIT:
-                if (_status == 0) {
-                    _steps.echo "testResultsPattern: ${_result}"
-                    _steps.nunit debug: false,
-                        failIfNoResults: false,
-                        keepJUnitReports: true,
-                        skipJUnitArchiver: false,
-                        testResultsPattern: "${_result}"
-                    result = true
-                } else {
-                    _steps.echo "NUnit test status is [${_status}]; will not archive."
-                }
-                break
-            default:
-                throw "Tool not defined for [${_testTool}]."
+            switch (_testTool) {
+                case TestTool.JUNIT:
+                    _steps.junit allowEmptyResults: true,
+                        healthScaleFactor: 1.0,
+                        keepLongStdio: true,
+                        testResults: "${_result}"
+                    break
+                case TestTool.NUNIT:
+                    if (_status == 0) {
+                        _steps.nunit debug: false,
+                            failIfNoResults: false,
+                            keepJUnitReports: true,
+                            skipJUnitArchiver: false,
+                            //testResultsPattern: "${_result}"
+                            testResultsPattern: "/nunit/*xml"
+                        result = true
+                    } else {
+                        _steps.echo "NUnit test status is [${_status}]; will not archive."
+                    }
+                    break
+                default:
+                    throw "Tool not defined for [${_testTool}]."
+            }
         }
     }
 
