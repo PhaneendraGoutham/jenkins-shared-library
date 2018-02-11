@@ -103,7 +103,10 @@ class TestFramework implements Serializable {
             }
 
             if (option == 'result') {
-                _result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}\\${value}"
+                String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}"
+                File resultDirectory = new File("${pathname}")
+                resultDirectory.mkdirs()
+                _result = "${resultDirectory.getAbsolutePath()}\\${value}"
                 _options += sprintf(
                     ' --result="%1$s"',
                     [
