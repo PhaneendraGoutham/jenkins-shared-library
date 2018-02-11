@@ -33,20 +33,17 @@ class TestFramework implements Serializable {
         constructOptions()
     }
 
-    boolean test() {
-        int status = 0
+    void test() {
         try {
-            status = _steps.bat returnStatus: true, script: "${tool} ${options}"
+            _steps.bat "${tool} ${options}"
         } catch (error) {
             _steps.echo "${error}"
         } finally {
-            archive(status)
-            return status
+            archive()
         }
     }
 
-    private void archive(String status) {
-        _steps.echo "${_testTool} returned with status of [${status}]."
+    private void archive() {
         _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}") {
             switch (_testTool) {
                 case TestTool.JUNIT:
@@ -69,6 +66,8 @@ class TestFramework implements Serializable {
     }
 
     private void constructOptions() {
+        _steps.echo "constructOptions()"
+        options = ''
         switch (_testTool) {
             case TestTool.NUNIT:
                 options = getNUnitOptions()
@@ -79,7 +78,7 @@ class TestFramework implements Serializable {
     }
 
     private String getNUnitOptions() {
-        options = ''
+        _steps.echo "getNUnitOptions()"
         for (def testOption in _testOptions) {
             String option = testOption.key
             def value = testOption.value
@@ -127,7 +126,7 @@ class TestFramework implements Serializable {
                 continue
             }
 
-            if (option == 'is32Bit') {
+            if (option == 'is32Bit' && value == true) {
                 options += ' --x86'
                 continue
             }
