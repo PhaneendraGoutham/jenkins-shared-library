@@ -11,8 +11,7 @@ class TestSettings extends Settings {
         _tests = tests
     }
 
-    private TestFramework testFramework
-    private TestOptions testOptions
+    private List<TestFramework> testFrameworks = []
 
     @Override
     protected void init() {
@@ -21,7 +20,12 @@ class TestSettings extends Settings {
 
     private void populate() {
         for (def test in _tests) {
-            _steps.echo "${test.key}: ${test.value}"
+            TestFramework testFramework = new TestFramework(
+                this,
+                "${test.key}",
+                test.value
+            )
+            testFramework.init()
         }
     }
 }
