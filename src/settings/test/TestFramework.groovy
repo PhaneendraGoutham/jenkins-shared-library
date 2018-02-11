@@ -80,8 +80,8 @@ class TestFramework implements Serializable {
     private String getNUnitOptions() {
         _steps.echo "getNUnitOptions()"
         for (def testOption in _testOptions) {
-            String option = testOption.key
-            def value = testOption.value
+            String option = "${testOption.key}"
+            def value = "${testOption.value}"
 
             if (option == 'assembly') {
                 def assembly = new FileNameFinder()
@@ -126,12 +126,16 @@ class TestFramework implements Serializable {
                 continue
             }
 
-            if (option == 'is32Bit' && value == true) {
-                options += ' --x86'
+            if (option == 'is32Bit') {
+                if (value == true) {
+                    options += ' --x86'
+                }
                 continue
             }
 
             _steps.echo "No option defined for [${option}] with value [${value}]."
         }
+
+        _steps.echo "options: [${options}]."
     }
 }
