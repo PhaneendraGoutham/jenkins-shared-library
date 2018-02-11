@@ -25,12 +25,11 @@ class TestFramework implements Serializable {
         switch (_testTool) {
             case TestTool.NUNIT:
                 tool = ToolConstants.NUNIT
+                options = getNUnitOptions()
                 break
             default:
                 throw "Tool not defined for [${_testTool}]."
         }
-
-        constructOptions()
     }
 
     void test() {
@@ -62,17 +61,6 @@ class TestFramework implements Serializable {
                 default:
                     throw "Tool not defined for [${_testTool}]."
             }
-        }
-    }
-
-    private void constructOptions() {
-        options = ''
-        switch (_testTool) {
-            case TestTool.NUNIT:
-                options = getNUnitOptions()
-                break
-            default:
-                throw "Tool not defined for [${_testTool}]."
         }
     }
 
@@ -134,5 +122,7 @@ class TestFramework implements Serializable {
 
             _steps.echo "No option defined for [${option}] with value [${value}]."
         }
+
+        return options
     }
 }
