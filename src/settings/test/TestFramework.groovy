@@ -16,9 +16,9 @@ class TestFramework implements Serializable {
         _testOptions = testOptions
     }
 
-    private String result
-    private String options
     private String tool
+    private String options = new String()
+    private String result
 
     void init() {
         _basedir = "${_steps.env.WORKSPACE}"
