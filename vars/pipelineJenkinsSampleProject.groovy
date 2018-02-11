@@ -2,6 +2,7 @@ import constants.PipelineConstants
 import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nuget.NuGetSettings
+import settings.test.TestSettings
 import settings.vcs.VcsSettings
 import settings.workspace.WorkspaceSettings
 
@@ -24,27 +25,10 @@ def call(body) {
     )
     pipelineSettings.workspaceSettings.create()
 
-    //region agent.node.workspace
-    /*
-    def _checkoutRoot = "!"
-    def _artifactRoot = "\$"
-    def _nodeWorkspace = setWorkspace("${jenkinsfile.agent.node.workspace.drive}", "${_checkoutRoot}", "${jenkinsfile.agent.node.workspace.folder}")
-    def _nodeWorkspaceBranchName = setWorkspaceBranchName("${BRANCH_NAME}")
-    def _nodeCustomWorkspace = sprintf(
-        '%1$s\\%2$s',
-        [
-            "${_nodeWorkspace}",
-            "${_nodeWorkspaceBranchName}"
-        ])
-    def _artifactsDirectory = _nodeCustomWorkspace.replace("${_checkoutRoot}", "${_artifactRoot}")
-    */
-    //endregion
-
     pipeline {
         agent {
             node {
                 label "${jenkinsfile.agent.node.label}"
-                //customWorkspace "${_nodeCustomWorkspace}"
                 customWorkspace "${pipelineSettings.workspaceSettings.customWorkspace}"
             }
         }
@@ -182,6 +166,43 @@ def call(body) {
                     success {
                         script {
                             currentBuild.result = PipelineConstants.SUCCESS
+                        }
+                    }
+                }
+            }
+
+            stage('test') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS &&
+                            jenkinsfile.test
+                    }
+                }
+                environment {
+                    TEST_STATUS = 0
+                }
+                steps {
+                    script {
+                        pipelineSettings.testSettings = new TestSettings(
+                            this,
+                            jenkinsfile.test
+                        )
+                        pipelineSettings.testSettings.create()
+
+                        TEST_STATUS = NUnit.Test(
+                            context: this,
+                            configuration: "${params.Configuration}",
+                            assembly: "${config.test.nunit.assembly}",
+                            is32Bit: "${config.test.nunit.is32Bit}",
+                            result: "${config.test.nunit.result}",
+                            where: "${config.test.nunit.where}"
+                        )
+                    }
+                }
+                post {
+                    always {
+                        script {
+                            currentBuild.result = TEST_STATUS == 0 ? PipelineConstants.SUCCESS : PipelineConstants.FAILURE
                         }
                     }
                 }

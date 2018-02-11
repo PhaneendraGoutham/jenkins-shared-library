@@ -1,6 +1,7 @@
 import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nuget.NuGetSettings
+import settings.test.TestSettings
 import settings.vcs.VcsSettings
 import settings.workspace.WorkspaceSettings
 
@@ -22,4 +23,8 @@ NuGetSettings getNuGetSettings() {
 
 BuildSettings getBuildSettings() {
     buildSettings
+}
+
+TestSettings getTestSettings() {
+    testSettings
 }
