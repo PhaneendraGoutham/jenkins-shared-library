@@ -6,7 +6,12 @@ class TestFramework implements Serializable {
     def _steps
     private TestTool _testTool
     private Map _testOptions
+
     private String _basedir
+    private String _tool
+    private String _options = new String()
+    private String _result
+    private int _status = 0
 
     TestFramework(def steps,
                   TestTool testTool,
@@ -16,16 +21,15 @@ class TestFramework implements Serializable {
         _testOptions = testOptions
     }
 
-    private String tool
-    private String options = new String()
-    private String result
+    String name = _testTool.toString()
+    boolean result = false
 
     void init() {
         _basedir = "${_steps.env.WORKSPACE}"
         switch (_testTool) {
             case TestTool.NUNIT:
-                tool = ToolConstants.NUNIT
-                options = getNUnitOptions()
+                _tool = ToolConstants.NUNIT
+                _options = getNUnitOptions()
                 break
             default:
                 throw "Tool not defined for [${_testTool}]."
@@ -34,9 +38,10 @@ class TestFramework implements Serializable {
 
     void test() {
         try {
-            _steps.bat "${tool} ${options}"
+            _status = _steps.bat returnStatus: true, script: "${_tool} ${_options}"
         } catch (error) {
             _steps.echo "${error}"
+            result = false
         } finally {
             archive()
         }
@@ -49,14 +54,19 @@ class TestFramework implements Serializable {
                     _steps.junit allowEmptyResults: true,
                         healthScaleFactor: 1.0,
                         keepLongStdio: true,
-                        testResults: "**/${result}"
+                        testResults: "**/${_result}"
                     break
                 case TestTool.NUNIT:
-                    _steps.nunit debug: false,
-                        failIfNoResults: false,
-                        keepJUnitReports: true,
-                        skipJUnitArchiver: false,
-                        testResultsPattern: "**/${result}"
+                    if (_status == 0) {
+                        _steps.nunit debug: false,
+                            failIfNoResults: false,
+                            keepJUnitReports: true,
+                            skipJUnitArchiver: false,
+                            testResultsPattern: "**/${_result}"
+                        result = true
+                    } else {
+                        _steps.echo "NUnit test status is [${_status}]; will not archive."
+                    }
                     break
                 default:
                     throw "Tool not defined for [${_testTool}]."
@@ -73,7 +83,7 @@ class TestFramework implements Serializable {
                 def assembly = new FileNameFinder()
                     .getFileNames("${_basedir}", "${value}", '')
                     .find { true }
-                options += sprintf(
+                _options += sprintf(
                     '"%1$s"',
                     [
                         assembly
@@ -83,7 +93,7 @@ class TestFramework implements Serializable {
             }
 
             if (option == 'config') {
-                options += sprintf(
+                _options += sprintf(
                     ' --config="%1$s"',
                     [
                         "${value}"
@@ -92,19 +102,19 @@ class TestFramework implements Serializable {
                 continue
             }
 
-            if (option == 'result') {
-                result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
-                options += sprintf(
-                    ' --result="%1$s"',
+            if (option == '_result') {
+                _result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
+                _options += sprintf(
+                    ' --_result="%1$s"',
                     [
-                        "${result}"
+                        "${_result}"
                     ]
                 )
                 continue
             }
 
             if (option == 'where') {
-                options += sprintf(
+                _options += sprintf(
                     ' --where=\"%1$s\"',
                     [
                         "${value}"
@@ -115,7 +125,7 @@ class TestFramework implements Serializable {
 
             if (option == 'is32Bit') {
                 if (value == true) {
-                    options += ' --x86'
+                    _options += ' --x86'
                 }
                 continue
             }
@@ -123,6 +133,6 @@ class TestFramework implements Serializable {
             _steps.echo "No option defined for [${option}] with value [${value}]."
         }
 
-        return options
+        return _options
     }
 }

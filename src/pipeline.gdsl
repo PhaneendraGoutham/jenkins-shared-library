@@ -41,7 +41,7 @@ contributor(ctx) {
     method(name: 'withCredentials', type: 'Object', params: [bindings:Map, body:'Closure'], doc: 'Bind credentials to variables')
     method(name: 'withEnv', type: 'Object', params: [overrides:Map, body:'Closure'], doc: 'Set environment variables')
     method(name: 'ws', type: 'Object', params: [dir:java.lang.String, body:'Closure'], doc: 'Allocate workspace')
-    method(name: 'catchError', type: 'Object', params: [body:'Closure'], doc: 'Advanced/Deprecated Catch error and set Build result')
+    method(name: 'catchError', type: 'Object', params: [body:'Closure'], doc: 'Advanced/Deprecated Catch error and set Build _result')
     method(name: 'dockerFingerprintRun', type: 'Object', params: [containerId:'java.lang.String'], doc: 'Advanced/Deprecated Record trace of a Docker image run in a container')
     method(name: 'dockerFingerprintRun', type: 'Object', namedParams: [parameter(name: 'containerId', type: 'java.lang.String'), parameter(name: 'toolName', type: 'java.lang.String'), ], doc: 'Record trace of a Docker image run in a container')
     method(name: 'envVarsForTool', type: 'Object', namedParams: [parameter(name: 'toolId', type: 'java.lang.String'), parameter(name: 'toolVersion', type: 'java.lang.String'), ], doc: 'Fetches the environment variables for a given tool in a list of \'FOO=bar\' strings suitable for the withEnv step.')

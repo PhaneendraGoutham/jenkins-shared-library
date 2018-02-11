@@ -4,6 +4,7 @@ import settings.Settings
 
 class TestSettings extends Settings {
     private Map _tests
+    private List<TestFramework> _testFrameworks = []
 
     TestSettings(def steps,
                  def tests) {
@@ -11,17 +12,24 @@ class TestSettings extends Settings {
         _tests = tests
     }
 
-    private List<TestFramework> testFrameworks = []
+    Map testResults = [:]
 
     @Override
     protected void init() {
         populate()
     }
 
-    void test() {
-        for (TestFramework testFramework in testFrameworks) {
+    boolean test() {
+        for (TestFramework testFramework in _testFrameworks) {
             testFramework.test()
+            testResults.put(testFramework.name, testFramework.result)
         }
+
+        boolean overallResult = testResults.each { name, result ->
+            _steps.echo "${name}: ${result}"
+        }
+
+        return true
     }
 
     private void populate() {
@@ -33,7 +41,8 @@ class TestSettings extends Settings {
                 test.value
             )
             testFramework.init()
-            testFrameworks.add(testFramework)
+            _testFrameworks.add(testFramework)
+            testResults.put(testTool, false)
         }
     }
 }

@@ -178,6 +178,9 @@ def call(body) {
                             jenkinsfile.test
                     }
                 }
+                environment {
+                    TEST_RESULT = false
+                }
                 steps {
                     script {
                         pipelineSettings.testSettings = new TestSettings(
@@ -185,18 +188,13 @@ def call(body) {
                             jenkinsfile.test
                         )
                         pipelineSettings.testSettings.create()
-                        pipelineSettings.testSettings.test()
+                        TEST_RESULT = pipelineSettings.testSettings.test()
                     }
                 }
                 post {
-                    failure {
+                    always {
                         script {
-                            currentBuild.result = PipelineConstants.FAILURE
-                        }
-                    }
-                    success {
-                        script {
-                            currentBuild.result = PipelineConstants.SUCCESS
+                            currentBuild.result = TEST_RESULT ? PipelineConstants.SUCCESS : PipelineConstants.FAILURE
                         }
                     }
                 }
