@@ -66,7 +66,6 @@ class TestFramework implements Serializable {
     }
 
     private void constructOptions() {
-        _steps.echo "constructOptions()"
         options = ''
         switch (_testTool) {
             case TestTool.NUNIT:
@@ -78,7 +77,6 @@ class TestFramework implements Serializable {
     }
 
     private String getNUnitOptions() {
-        _steps.echo "getNUnitOptions()"
         for (def testOption in _testOptions) {
             String option = "${testOption.key}"
             def value = "${testOption.value}"
@@ -107,10 +105,11 @@ class TestFramework implements Serializable {
             }
 
             if (option == 'result') {
+                result = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
                 options += sprintf(
                     ' --result="%1$s"',
                     [
-                        "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nunit\\${value}"
+                        "${result}"
                     ]
                 )
                 continue
@@ -135,7 +134,5 @@ class TestFramework implements Serializable {
 
             _steps.echo "No option defined for [${option}] with value [${value}]."
         }
-
-        _steps.echo "options: [${options}]."
     }
 }

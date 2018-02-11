@@ -154,7 +154,7 @@ def call(body) {
                             jenkinsfile.build.projects
                         )
                         pipelineSettings.buildSettings.create()
-                        pipelineSettings.buildSettings.execute()
+                        pipelineSettings.buildSettings.build()
                     }
                 }
                 post {

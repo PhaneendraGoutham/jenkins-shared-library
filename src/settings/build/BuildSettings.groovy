@@ -19,7 +19,7 @@ class BuildSettings extends Settings {
         populate()
     }
 
-    void execute() {
+    void build() {
         MSBuild msBuild = new MSBuild(_steps)
         for (BuildItem buildItem in buildItems) {
             _steps.echo "Executing build workflow for item: [${buildItem.name}]."
