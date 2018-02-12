@@ -25,6 +25,12 @@ class TestSettings extends Settings {
             testResults.put(testFramework.name, testFramework.result)
         }
 
+        for (boolean result in testResults.values()) {
+            if (!result) {
+                return false
+            }
+        }
+        
         return true
     }
 
