@@ -22,7 +22,7 @@ class TestFramework implements Serializable {
     }
 
     String name = _testTool.toString()
-    boolean result
+    boolean result = false
 
     void init() {
         _basedir = "${_steps.env.WORKSPACE}"

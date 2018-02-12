@@ -25,6 +25,10 @@ class TestSettings extends Settings {
             testResults.put(testFramework.name, testFramework.result)
         }
 
+        for (def testResult in testResults){
+            _steps.echo "test(): testResult -> ${testResult.key}: ${testResult.value}"
+        }
+
         for (boolean result in testResults.values()) {
             _steps.echo "test(): result = [${result}]"
             if (!result) {
