@@ -26,11 +26,12 @@ class TestSettings extends Settings {
         }
 
         for (boolean result in testResults.values()) {
+            _steps.echo "test(): result = [${result}]"
             if (!result) {
                 return false
             }
         }
-        
+
         return true
     }
 
