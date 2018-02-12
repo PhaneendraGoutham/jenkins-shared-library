@@ -62,7 +62,6 @@ class TestFramework implements Serializable {
                             failIfNoResults: false,
                             keepJUnitReports: true,
                             skipJUnitArchiver: false,
-                            //testResultsPattern: "${_result}"
                             testResultsPattern: "/nunit/*xml"
                         result = true
                     } else {
