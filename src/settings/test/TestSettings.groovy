@@ -22,7 +22,7 @@ class TestSettings extends Settings {
     boolean test() {
         for (TestFramework testFramework in _testFrameworks) {
             testFramework.test()
-            testResults.put(testFramework.name, testFramework.result)
+            testResults[testFramework.name] = testFramework.result
         }
 
         for (def testResult in testResults){
