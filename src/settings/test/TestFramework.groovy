@@ -21,7 +21,6 @@ class TestFramework implements Serializable {
         _testOptions = testOptions
     }
 
-    //String name = _testTool.toString()
     boolean result = false
 
     void init() {
