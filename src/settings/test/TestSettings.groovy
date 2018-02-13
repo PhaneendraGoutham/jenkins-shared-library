@@ -22,7 +22,7 @@ class TestSettings extends Settings {
     boolean test() {
         for (TestFramework testFramework in _testFrameworks) {
             testFramework.test()
-            testResults[testFramework.name] = testFramework.result
+            testResults["${testFramework.name}"] = testFramework.result
         }
 
         for (def testResult in testResults){
@@ -41,7 +41,6 @@ class TestSettings extends Settings {
 
     private void populate() {
         for (def test in _tests) {
-            _steps.echo "populate(): test.key = [${test.key}]"
             String testTool = "${test.key}".toUpperCase()
             TestFramework testFramework = new TestFramework(
                 _steps,
