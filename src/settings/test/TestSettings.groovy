@@ -42,6 +42,7 @@ class TestSettings extends Settings {
     }
 
     private void populate() {
+        _steps.echo "populate(): _tests size -> [${_tests.size()}]"
         for (def test in _tests) {
             String testTool = "${test.key}".toUpperCase()
             TestFramework testFramework = new TestFramework(
