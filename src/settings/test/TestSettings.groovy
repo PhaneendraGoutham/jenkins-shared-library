@@ -20,7 +20,6 @@ class TestSettings extends Settings {
     }
 
     boolean test() {
-        _steps.echo "test(): _testFrameworks size -> [${_testFrameworks.size()}]"
         for (TestFramework testFramework in _testFrameworks) {
             testFramework.test()
             testResults[testFramework.name] = testFramework.result
@@ -41,8 +40,8 @@ class TestSettings extends Settings {
     }
 
     private void populate() {
-        _steps.echo "populate(): _testFrameworks size -> [${_testFrameworks.size()}]"
         for (def test in _tests) {
+            _steps.echo "populate(): test.key = [${test.key}]"
             String testTool = "${test.key}".toUpperCase()
             TestFramework testFramework = new TestFramework(
                 _steps,
