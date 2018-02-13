@@ -4,7 +4,8 @@ import settings.Settings
 
 class TestSettings extends Settings {
     private Map _tests
-    private List<TestFramework> _testFrameworks = []
+    private Map<TestTool, TestFramework> _testFrameworks = [:]
+    //private List<TestFramework> _testFrameworks = []
 
     TestSettings(def steps,
                  def tests) {
@@ -12,7 +13,8 @@ class TestSettings extends Settings {
         _tests = tests
     }
 
-    Map testResults = [:]
+    //Map testResults = [:]
+    List<Boolean> results = []
 
     @Override
     protected void init() {
@@ -20,18 +22,31 @@ class TestSettings extends Settings {
     }
 
     boolean test() {
+        /*
         for (TestFramework testFramework in _testFrameworks) {
             testFramework.test()
             testResults["${testFramework.name}"] = testFramework.result
         }
 
-        for (def testResult in testResults){
+        for (def testResult in testResults) {
             _steps.echo "test(): testResult -> ${testResult.key}: ${testResult.value}"
         }
 
         for (boolean result in testResults.values()) {
             _steps.echo "test(): result = [${result}]"
             if (!result) {
+                return false
+            }
+        }
+        */
+
+        for (def testFramework in _testFrameworks.values()) {
+            testFramework.test()
+            results.add(testFramework.result)
+        }
+
+        results.each { it ->
+            if (!it) {
                 return false
             }
         }
@@ -48,8 +63,9 @@ class TestSettings extends Settings {
                 test.value
             )
             testFramework.init()
-            _testFrameworks.add(testFramework)
-            testResults.put(testTool, false)
+            //_testFrameworks.add(testFramework)
+            _testFrameworks.put("${testTool}" as TestTool, testFramework)
+            //testResults.put(testTool, false)
         }
     }
 }
