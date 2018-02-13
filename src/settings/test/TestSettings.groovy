@@ -21,7 +21,9 @@ class TestSettings extends Settings {
 
     boolean test() {
         for (TestFramework testFramework in _testFrameworks) {
+            _steps.echo "Testing ${testFramework.name}"
             testFramework.test()
+            _steps.echo "Test result is [${testFramework.result}]"
             testResults[testFramework.name] = testFramework.result
         }
 
