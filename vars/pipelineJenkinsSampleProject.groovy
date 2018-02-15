@@ -82,8 +82,15 @@ def call(body) {
                             this,
                             !jenkinsfile.semver
                                 ? ''
-                                : "${jenkinsfile.semver.gitVersion}")
+                                : "${jenkinsfile.semver.gitVersion}"
+                        )
                         pipelineSettings.gitSettings.create()
+
+                        pipelineSettings.nuGetSettings = new NuGetSettings(
+                            this,
+                            jenkinsfile.build.artifacts.nuget
+                        )
+                        pipelineSettings.nuGetSettings.create()
                     }
                 }
                 post {
@@ -143,12 +150,6 @@ def call(body) {
                 }
                 steps {
                     script {
-                        pipelineSettings.nuGetSettings = new NuGetSettings(
-                            this,
-                            "${jenkinsfile.build.restore.sources}"
-                        )
-                        pipelineSettings.nuGetSettings.create()
-
                         pipelineSettings.buildSettings = new BuildSettings(
                             this,
                             jenkinsfile.build.projects
@@ -197,6 +198,40 @@ def call(body) {
                             currentBuild.result = TEST_RESULT ? PipelineConstants.SUCCESS : PipelineConstants.FAILURE
                         }
                     }
+                }
+            }
+
+            stage('nupkg') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS &&
+                            params.publishNupkg &&
+                            jenkinsfile.build.artifacts.nuget
+                    }
+                }
+                steps {
+                    script {
+                        pipelineSettings.nuGetSettings.pack()
+                    }
+                }
+                post {
+                    failure {
+                        script {
+                            currentBuild.result = PipelineConstants.UNSTABLE
+                        }
+                    }
+                    /*
+                    success {
+                        script {
+                            Nexus.Push(
+                                context: this,
+                                format: "${config.nexus["${configManager.gitBranch}"].format}",
+                                id: "${config.nexus["${configManager.gitBranch}"].id}",
+                                url: "${config.nexus["${configManager.gitBranch}"].url}"
+                            )
+                        }
+                    }
+                    */
                 }
             }
         }

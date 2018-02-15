@@ -78,7 +78,7 @@ class TestFramework implements Serializable {
             String option = "${testOption.key}"
             def value = "${testOption.value}"
 
-            if (option == 'assembly') {
+            if (option == NUnitConstants.ASSEMBLY) {
                 def assembly = new FileNameFinder()
                     .getFileNames("${_basedir}", "${value}", '')
                     .find { true }
@@ -91,41 +91,44 @@ class TestFramework implements Serializable {
                 continue
             }
 
-            if (option == 'config') {
+            if (option == NUnitConstants.CONFIG) {
                 _options += sprintf(
-                    ' --config="%1$s"',
+                    ' --%1$s="%2$s"',
                     [
+                        NUnitConstants.CONFIG,
                         "${value}"
                     ]
                 )
                 continue
             }
 
-            if (option == 'result') {
+            if (option == NUnitConstants.RESULT) {
                 String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}".toLowerCase()
                 File resultDirectory = new File("${pathname}")
                 resultDirectory.mkdirs()
                 _result = "${resultDirectory.getAbsolutePath()}\\${value}"
                 _options += sprintf(
-                    ' --result="%1$s"',
+                    ' --%1$s="%2$s"',
                     [
+                        NUnitConstants.RESULT,
                         "${_result}"
                     ]
                 )
                 continue
             }
 
-            if (option == 'where') {
+            if (option == NUnitConstants.WHERE) {
                 _options += sprintf(
-                    ' --where=\"%1$s\"',
+                    ' --%1$s=\"%2$s\"',
                     [
+                        NUnitConstants.WHERE,
                         "${value}"
                     ]
                 )
                 continue
             }
 
-            if (option == 'is32Bit') {
+            if (option == NUnitConstants.IS32BIT) {
                 if (value == true) {
                     _options += ' --x86'
                 }
