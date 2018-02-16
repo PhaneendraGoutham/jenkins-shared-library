@@ -240,7 +240,9 @@ def call(body) {
         post {
             always {
                 bat 'set > env.out'
-                Notify.complete(this, "${jenkinsfile.always.notify.destination}")
+                script {
+                    Notify.complete(this, "${jenkinsfile.always.notify.destination}")
+                }
             }
             // changed {
             // }
