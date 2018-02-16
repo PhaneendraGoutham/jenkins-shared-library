@@ -30,7 +30,7 @@ class WorkspaceSettings extends Settings {
 
         String branch = _steps.pipelineSettings.gitSettings.branch
         String workspace = customWorkspace - branch
-        try {
+//        try {
             _steps.steps.dir(workspace) {
                 File workspaceDirectory = new File("${workspace}")
                 String[] branchDirectories = workspaceDirectory.list()
@@ -48,10 +48,10 @@ class WorkspaceSettings extends Settings {
                 _steps.echo "Deleting artifacts workspace [${artifactsDirectory.getAbsolutePath()}]."
                 artifactsDirectory.deleteDir()
             }
-        }
-        catch (error) {
-            _steps.echo "${error}"
-        }
+//        }
+//        catch (error) {
+//            _steps.echo "${error}"
+//        }
     }
 
     @Override
