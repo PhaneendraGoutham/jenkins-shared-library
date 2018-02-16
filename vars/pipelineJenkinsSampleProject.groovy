@@ -1,4 +1,5 @@
 import constants.PipelineConstants
+import post.always.Notify
 import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
@@ -239,6 +240,7 @@ def call(body) {
         post {
             always {
                 bat 'set > env.out'
+                Notify.complete(this, "${jenkinsfile.always.notify.destination}")
             }
             // changed {
             // }

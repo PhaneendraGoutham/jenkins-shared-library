@@ -54,7 +54,8 @@ class GitSettings extends Settings {
             [
                 _assembly,
                 output
-            ])
+            ]
+        )
 
         try {
             _steps.bat "${tool} ${args}"
