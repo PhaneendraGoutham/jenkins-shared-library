@@ -1,6 +1,7 @@
 import constants.PipelineConstants
 import settings.build.BuildSettings
 import settings.git.GitSettings
+import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
 import settings.test.TestSettings
 import settings.vcs.VcsSettings
@@ -85,6 +86,12 @@ def call(body) {
                                 : "${jenkinsfile.semver.gitVersion}"
                         )
                         pipelineSettings.gitSettings.create()
+
+                        pipelineSettings.nexusSettings = new NexusSettings(
+                            this,
+                            jenkinsfile.nexus
+                        )
+                        pipelineSettings.nexusSettings.create()
 
                         pipelineSettings.nuGetSettings = new NuGetSettings(
                             this,
@@ -220,18 +227,11 @@ def call(body) {
                             currentBuild.result = PipelineConstants.UNSTABLE
                         }
                     }
-                    /*
                     success {
                         script {
-                            Nexus.Push(
-                                context: this,
-                                format: "${config.nexus["${configManager.gitBranch}"].format}",
-                                id: "${config.nexus["${configManager.gitBranch}"].id}",
-                                url: "${config.nexus["${configManager.gitBranch}"].url}"
-                            )
+                            pipelineSettings.nuGetSettings.push()
                         }
                     }
-                    */
                 }
             }
         }
@@ -245,11 +245,13 @@ def call(body) {
             success {
                 script {
                     pipelineSettings.vcsSettings.notify(0)
+                    pipelineSettings.workspaceSettings.clean()
                 }
             }
             unstable {
                 script {
                     pipelineSettings.vcsSettings.notify(0)
+                    pipelineSettings.workspaceSettings.clean()
                 }
             }
             failure {

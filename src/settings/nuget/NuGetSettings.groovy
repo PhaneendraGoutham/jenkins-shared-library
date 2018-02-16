@@ -6,6 +6,7 @@ import settings.Settings
 class NuGetSettings extends Settings {
     private Map _nuget
     private def _tool
+    private String _origin
 
     NuGetSettings(def steps,
                   def nuget) {
@@ -20,6 +21,7 @@ class NuGetSettings extends Settings {
     @Override
     protected void init() {
         _tool = ToolConstants.NUGET
+        _origin = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nupkg"
         populate()
     }
 
@@ -29,7 +31,7 @@ class NuGetSettings extends Settings {
             return
         }
 
-        _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\nupkg") {
+        _steps.dir(_origin) {
             for (def project in projects) {
                 try {
                     def args = sprintf(
@@ -70,15 +72,37 @@ class NuGetSettings extends Settings {
 
                     _steps.bat "${_tool} ${args}"
                 }
-                catch (err) {
-                    throw err
+                catch (error) {
+                    throw error
                 }
             }
         }
     }
 
     void push() {
+        String branch = _steps.pipelineSettings.gitSettings.branch
+        String id = _steps.pipelineSettings.nexusSettings.repositories['nuget']['id']
+        String url = _steps.pipelineSettings.nexusSettings.repositories['nuget'][branch]
+        _steps.withCredentials([
+            _steps.string(
+                credentialsId: id,
+                variable: 'nugetapikey')]) {
+            _steps.dir(_origin) {
+                def args = sprintf(
+                    'push *.symbols.nupkg %1$s -source %2$s',
+                    [
+                        "${_steps.env.nugetapikey}",
+                        url
+                    ])
 
+                try {
+                    _steps.bat "${_tool} ${args}"
+                }
+                catch (error) {
+                    throw error
+                }
+            }
+        }
     }
 
     void restore(String project) {
@@ -93,8 +117,8 @@ class NuGetSettings extends Settings {
         try {
             _steps.bat "${_tool} ${args}"
         }
-        catch (err) {
-            throw err
+        catch (error) {
+            throw error
         }
     }
 

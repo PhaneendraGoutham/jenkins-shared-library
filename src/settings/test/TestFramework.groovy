@@ -9,6 +9,7 @@ class TestFramework implements Serializable {
 
     private String _basedir
     private String _tool
+    private String _origin
     private String _options = new String()
     private String _result
     private int _status = 0
@@ -25,6 +26,7 @@ class TestFramework implements Serializable {
 
     void init() {
         _basedir = "${_steps.env.WORKSPACE}"
+        _origin = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}"
         switch (_testTool) {
             case TestTool.NUNIT:
                 _tool = ToolConstants.NUNIT
@@ -47,7 +49,7 @@ class TestFramework implements Serializable {
     }
 
     private void archive() {
-        _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}") {
+        _steps.dir(_origin) {
             switch (_testTool) {
                 case TestTool.JUNIT:
                     _steps.junit allowEmptyResults: true,
@@ -61,7 +63,7 @@ class TestFramework implements Serializable {
                             failIfNoResults: false,
                             keepJUnitReports: true,
                             skipJUnitArchiver: false,
-                            testResultsPattern: "/nunit/*xml"
+                            testResultsPattern: "/nunit/*.xml"
                         result = true
                     } else {
                         _steps.echo "NUnit test status is [${_status}]; will not archive."
@@ -103,7 +105,7 @@ class TestFramework implements Serializable {
             }
 
             if (option == NUnitConstants.RESULT) {
-                String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_testTool}".toLowerCase()
+                String pathname = "${_origin}\\${_testTool}".toLowerCase()
                 File resultDirectory = new File("${pathname}")
                 resultDirectory.mkdirs()
                 _result = "${resultDirectory.getAbsolutePath()}\\${value}"

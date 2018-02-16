@@ -1,5 +1,6 @@
 import settings.build.BuildSettings
 import settings.git.GitSettings
+import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
 import settings.test.TestSettings
 import settings.vcs.VcsSettings
@@ -15,6 +16,10 @@ GitSettings getGitSettings() {
 
 VcsSettings getVcsSettings() {
     vcsSettings
+}
+
+NexusSettings getNexusSettings() {
+    nexusSettings
 }
 
 NuGetSettings getNuGetSettings() {

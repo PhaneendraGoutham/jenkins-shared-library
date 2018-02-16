@@ -1,6 +1,7 @@
 package settings.workspace
 
 import constants.GitFlowConstants
+import constants.PipelineConstants
 import settings.Settings
 
 class WorkspaceSettings extends Settings {
@@ -20,6 +21,38 @@ class WorkspaceSettings extends Settings {
 
     String customWorkspace
     String artifactsWorkspace
+
+    void clean() {
+        if (!_steps.currentBuild.currentResult == PipelineConstants.SUCCESS ||
+            !_steps.currentBuild.currentResult == PipelineConstants.UNSTABLE) {
+            _steps.echo "Not cleaning workspaces as result is [${_steps.currentBuild.currentResult}]."
+        }
+
+        String branch = _steps.pipelineSettings.gitSettings.branch
+        String workspace = customWorkspace - branch
+        try {
+            _steps.steps.dir(workspace) {
+                File workspaceDirectory = new File("${workspace}")
+                String[] branchDirectories = workspaceDirectory.list()
+                for (def name in branchDirectories) {
+                    if (name.startsWith(branch)) {
+                        _steps.echo "Deleting custom workspace branch directory [${name}]."
+                        File branchDirectory = new File("${workspace}\\" + name)
+                        branchDirectory.deleteDir()
+                    }
+                }
+            }
+
+            File artifactsDirectory = new File("${artifactsWorkspace}")
+            if (artifactsDirectory.exists()) {
+                _steps.echo "Deleting artifacts workspace [${artifactsDirectory.getAbsolutePath()}]."
+                artifactsDirectory.deleteDir()
+            }
+        }
+        catch (error) {
+            _steps.echo "${error}"
+        }
+    }
 
     @Override
     protected void init() {
