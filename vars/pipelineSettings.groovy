@@ -2,6 +2,7 @@ import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
+import settings.publish.PublishSettings
 import settings.test.TestSettings
 import settings.vcs.VcsSettings
 import settings.workspace.WorkspaceSettings
@@ -32,4 +33,8 @@ BuildSettings getBuildSettings() {
 
 TestSettings getTestSettings() {
     testSettings
+}
+
+PublishSettings getPublishSettings() {
+    publishSettings
 }

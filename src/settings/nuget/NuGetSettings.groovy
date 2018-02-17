@@ -1,5 +1,6 @@
 package settings.nuget
 
+import constants.NexusConstants
 import constants.ToolConstants
 import settings.Settings
 
@@ -81,8 +82,8 @@ class NuGetSettings extends Settings {
 
     void push() {
         String branch = _steps.pipelineSettings.gitSettings.branch
-        String id = _steps.pipelineSettings.nexusSettings.repositories['nuget']['id']
-        String url = _steps.pipelineSettings.nexusSettings.repositories['nuget'][branch]
+        String id = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.NUGET]['id']
+        String url = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.NUGET][branch]
         _steps.withCredentials([
             _steps.string(
                 credentialsId: id,

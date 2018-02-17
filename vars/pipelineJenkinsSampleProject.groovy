@@ -4,6 +4,7 @@ import settings.build.BuildSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
+import settings.publish.PublishSettings
 import settings.test.TestSettings
 import settings.vcs.VcsSettings
 import settings.workspace.WorkspaceSettings
@@ -55,20 +56,24 @@ def call(body) {
             )
             */
             choice(choices: "${jenkinsfile.parameters.configuration}",
-                description: 'Project/Solution Build Configuration (e.g. Debug, Release)',
+                description: 'Project/Solution build configuration (e.g. Debug, Release).',
                 name: 'configuration'
             )
             choice(choices: "${jenkinsfile.parameters.platform}",
-                description: 'Project/Solution Build Platform (e.g. Any CPU, x86)',
+                description: 'Project/Solution build platform (e.g. Any CPU, x86).',
                 name: 'platform'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.publishArtifacts,
-                description: 'Creates And Publishes Deployment Packages (defined in Jenkinsfile)',
-                name: 'publishArtifacts'
+            booleanParam(defaultValue: jenkinsfile.parameters.nupkg,
+                description: 'Publish nupkg defined in Jenkinsfile (build.nuget.projects).',
+                name: 'nupkg'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.publishNupkg,
-                description: 'Creates And Publishes NuGet Packages (defined in Jenkinsfile)',
-                name: 'publishNupkg'
+            booleanParam(defaultValue: jenkinsfile.parameters.filesets,
+                description: 'Publish filesets defined in Jenkinsfile (build.artifacts.publish.filesets).',
+                name: 'filesets'
+            )
+            booleanParam(defaultValue: jenkinsfile.parameters.webservices,
+                description: 'Publish webservices defined in Jenkinsfile (build.artifacts.publish.webservices).',
+                name: 'webservices'
             )
         }
 
@@ -213,7 +218,7 @@ def call(body) {
                 when {
                     expression {
                         return currentBuild.result == PipelineConstants.SUCCESS &&
-                            params.publishNupkg &&
+                            params.nupkg &&
                             jenkinsfile.build.artifacts.nuget
                     }
                 }
@@ -235,13 +240,37 @@ def call(body) {
                     }
                 }
             }
+
+            stage('publish') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS &&
+                            BRANCH_NAME ==~ "${jenkinsfile.directives.when.publish.branch}" &&
+                            (params.filesets || params.webservices)
+                    }
+                }
+                steps {
+                    pipelineSettings.publishSettings = new PublishSettings(
+                        this,
+                        jenkinsfile.build.artifacts.publish
+                    )
+                    pipelineSettings.publishSettings.create()
+                }
+                post {
+                    failure {
+                        script {
+                            currentBuild.result = PipelineConstants.FAILURE
+                        }
+                    }
+                }
+            }
         }
 
         post {
             always {
                 bat 'set > env.out'
                 script {
-                    Notify.complete(this, "${jenkinsfile.post.always.notify.destination}")
+                    Notify.complete(this, "${jenkinsfile.post.always.notify.root}")
                 }
             }
             // changed {
