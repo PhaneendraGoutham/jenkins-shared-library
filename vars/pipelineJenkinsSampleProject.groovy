@@ -5,6 +5,7 @@ import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
 import settings.publish.PublishSettings
+import settings.publish.PublishType
 import settings.test.TestSettings
 import settings.vcs.VcsSettings
 import settings.workspace.WorkspaceSettings
@@ -251,6 +252,10 @@ def call(body) {
                 }
                 steps {
                     script {
+                        Map<PublishType, Boolean> publishParams = [:]
+                        publishParams.put(PublishType.FILESETS, params.filesets)
+                        publishParams.put(PublishType.WEBSERVICES, params.webservices)
+
                         pipelineSettings.publishSettings = new PublishSettings(
                             this,
                             jenkinsfile.build.artifacts.publish

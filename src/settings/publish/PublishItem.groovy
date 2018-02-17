@@ -13,4 +13,5 @@ class PublishItem implements Serializable {
     String include
     String name
     String repository
+    boolean isPublish
 }
