@@ -35,11 +35,11 @@ class PublishSettings extends Settings {
         }
 
         for(PublishItem publishItem in _publishItems) {
-            println "publishType: ${publishItem.publishType}"
-            println "include: ${publishItem.include}"
-            println "name: ${publishItem.name}"
-            println "repository: ${publishItem.repository}"
-            println "isPublish: ${publishItem.isPublish}"
+            _steps.echo "publishType: ${publishItem.publishType}"
+            _steps.echo "include: ${publishItem.include}"
+            _steps.echo "name: ${publishItem.name}"
+            _steps.echo "repository: ${publishItem.repository}"
+            _steps.echo "isPublish: ${publishItem.isPublish}"
         }
     }
 }
