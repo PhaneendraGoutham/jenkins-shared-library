@@ -258,7 +258,8 @@ def call(body) {
 
                         pipelineSettings.publishSettings = new PublishSettings(
                             this,
-                            jenkinsfile.build.artifacts.publish
+                            jenkinsfile.build.artifacts.publish,
+                            publishParams
                         )
                         pipelineSettings.publishSettings.create()
                     }
