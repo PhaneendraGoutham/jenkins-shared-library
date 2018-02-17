@@ -250,11 +250,13 @@ def call(body) {
                     }
                 }
                 steps {
-                    pipelineSettings.publishSettings = new PublishSettings(
-                        this,
-                        jenkinsfile.build.artifacts.publish
-                    )
-                    pipelineSettings.publishSettings.create()
+                    script {
+                        pipelineSettings.publishSettings = new PublishSettings(
+                            this,
+                            jenkinsfile.build.artifacts.publish
+                        )
+                        pipelineSettings.publishSettings.create()
+                    }
                 }
                 post {
                     failure {
