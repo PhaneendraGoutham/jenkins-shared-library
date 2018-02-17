@@ -21,6 +21,7 @@ class PublishSettings extends Settings {
         for (def publishEntry in _publish) {
             String entry = "${publishEntry.key}".toUpperCase()
             PublishType publishType = "${entry}" as PublishType
+            _steps.echo "publishType: ${publishType}"
             PublishItem publishItem = new PublishItem(
                 publishType,
                 publishEntry.value
