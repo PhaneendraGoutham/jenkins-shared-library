@@ -4,6 +4,8 @@ import settings.Settings
 import settings.publish.PublishItem
 
 abstract class PublishType extends Settings {
+    private String _zipFile
+
     PublishType(def steps,
                 PublishItem publishItem) {
         super (steps)
@@ -27,17 +29,26 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        //archive()
+        zip()
+        archive()
     }
 
     abstract void bundle()
 
-    protected void archive() {
-        _steps.dir(origin) {
-            _steps.archiveArtifacts allowEmptyArchive: false,
-                artifacts: '*',
-                caseSensitive: false,
-                fingerprint: true
-        }
+    private void zip() {
+        String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
+        File zip = new File("${pathname}")
+        zip.mkdirs()
+        _zipFile = "${zip.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
+        _steps.zip dir: "${origin}\\${publishItem.name}",
+            glob: '*',
+            zipFile: _zipFile
+    }
+
+    private void archive() {
+        _steps.archiveArtifacts allowEmptyArchive: false,
+            artifacts: _zipFile,
+            caseSensitive: false,
+            fingerprint: true
     }
 }
