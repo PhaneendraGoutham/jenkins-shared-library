@@ -37,9 +37,9 @@ abstract class PublishType extends Settings {
 
     private void zip() {
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
-        File zip = new File("${pathname}")
-        zip.mkdirs()
-        _zipFile = "${zip.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
+        File zipDirectory = new File("${pathname}")
+        zipDirectory.mkdirs()
+        _zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
         _steps.zip dir: "${origin}\\${publishItem.name}",
             glob: '*',
             zipFile: _zipFile
