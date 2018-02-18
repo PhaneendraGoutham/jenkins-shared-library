@@ -1,16 +1,17 @@
 package settings.publish
 
 import settings.Settings
+import settings.publish.types.PublishFilesets
 
 class PublishSettings extends Settings {
     private Map _publish
-    private Map<PublishType, Boolean> _publishParams
+    private Map<PublishArtifactType, Boolean> _publishParams
 
     private List<PublishItem> _publishItems = []
 
     PublishSettings(def steps,
                     def publish,
-                    Map<PublishType, Boolean> publishParams) {
+                    Map<PublishArtifactType, Boolean> publishParams) {
         super(steps)
         _publish = publish
         _publishParams = publishParams
@@ -21,25 +22,33 @@ class PublishSettings extends Settings {
         populate()
     }
 
+    void publish() {
+        for(PublishItem publishItem in _publishItems) {
+            switch(publishItem.publishArtifactType) {
+                case PublishArtifactType.FILESETS:
+                    PublishFilesets publishFilesets = new PublishFilesets(
+                        _steps,
+                        publishItem
+                    )
+                    publishFilesets.publish()
+                    break
+                case PublishArtifactType.WEBSERVICES:
+                    break
+            }
+        }
+    }
+
     private void populate() {
         for (def publishEntry in _publish) {
             String entry = "${publishEntry.key}".toUpperCase()
-            PublishType publishType = "${entry}" as PublishType
+            PublishArtifactType publishArtifactType = "${entry}" as PublishArtifactType
             PublishItem publishItem = new PublishItem(
-                publishType,
+                publishArtifactType,
                 publishEntry.value
             )
 
-            publishItem.isPublish = _publishParams[publishType]
+            publishItem.isPublish = _publishParams[publishArtifactType]
             _publishItems.add(publishItem)
-        }
-
-        for(PublishItem publishItem in _publishItems) {
-            _steps.echo "publishType: ${publishItem.publishType}"
-            _steps.echo "include: ${publishItem.include}"
-            _steps.echo "name: ${publishItem.name}"
-            _steps.echo "repository: ${publishItem.repository}"
-            _steps.echo "isPublish: ${publishItem.isPublish}"
         }
     }
 }

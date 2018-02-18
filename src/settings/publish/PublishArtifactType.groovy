@@ -1,6 +1,6 @@
 package settings.publish
 
-enum PublishType {
+enum PublishArtifactType {
     FILESETS,
     WEBSERVICES
 }

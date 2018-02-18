@@ -1,15 +1,15 @@
 package settings.publish
 
 class PublishItem implements Serializable {
-    PublishItem(PublishType type,
+    PublishItem(PublishArtifactType artifactType,
                 def item) {
-        publishType = type
+        publishArtifactType = artifactType
         include = item['include']
         name = item['name']
         repository = item['repository']
     }
 
-    PublishType publishType
+    PublishArtifactType publishArtifactType
     String include
     String name
     String repository
