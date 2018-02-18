@@ -45,9 +45,11 @@ abstract class PublishType extends Settings {
     }
 
     void archive() {
-        _steps.archiveArtifacts allowEmptyArchive: false,
-            artifacts: zipFile,
-            caseSensitive: false,
-            fingerprint: true
+        _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip") {
+            _steps.archiveArtifacts allowEmptyArchive: false,
+                artifacts: "${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip",
+                caseSensitive: false,
+                fingerprint: true
+        }
     }
 }
