@@ -15,6 +15,7 @@ class PublishFilesets extends PublishType {
 
     @Override
     void bundle() {
+        _steps.echo "parsed -> ${parsed}"
         for (String fileset in parsed) {
             def item = new FileNameFinder()
                 .getFileNames("${_steps.env.WORKSPACE}", "${fileset}")
