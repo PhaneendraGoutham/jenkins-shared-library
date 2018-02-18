@@ -34,7 +34,7 @@ abstract class PublishType extends Settings {
 
     protected void archive() {
         _steps.dir(origin) {
-            _steps.archiveArtifacts allowEmptyArchive: true,
+            _steps.archiveArtifacts allowEmptyArchive: false,
                 artifacts: '*',
                 caseSensitive: false,
                 fingerprint: true
