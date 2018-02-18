@@ -49,7 +49,7 @@ abstract class PublishType extends Settings {
     void archive() {
         _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip") {
             _steps.archiveArtifacts allowEmptyArchive: false,
-                artifacts: FilenameUtils.getBaseName("${zipFile}"),
+                artifacts: FilenameUtils.getName("${zipFile}"),
                 caseSensitive: false,
                 fingerprint: true
         }

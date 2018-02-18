@@ -69,7 +69,12 @@ class WorkspaceSettings extends Settings {
                     .replaceAll('.git', ''),
                 getBranchName()
             ])
+
         artifactsWorkspace = customWorkspace.replaceFirst("${_root}", "tmp")
+        File artifactsWorkspaceDirectory = new File("${artifactsWorkspace}")
+        if (artifactsWorkspaceDirectory.exists() && artifactsWorkspaceDirectory.isDirectory()) {
+            artifactsWorkspaceDirectory.deleteDir()
+        }
     }
 
     private String getBranchName() {
