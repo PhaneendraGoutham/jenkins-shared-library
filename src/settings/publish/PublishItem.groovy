@@ -4,9 +4,9 @@ class PublishItem implements Serializable {
     PublishItem(PublishArtifactType artifactType,
                 def item) {
         publishArtifactType = artifactType
-        include = item['include']
-        name = item['name']
-        repository = item['repository']
+        include = item['include'].toString()
+        name = item['name'].toString()
+        repository = item['repository'].toString()
     }
 
     PublishArtifactType publishArtifactType
