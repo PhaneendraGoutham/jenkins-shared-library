@@ -42,9 +42,10 @@ class PublishSettings extends Settings {
         for (def publishEntry in _publish) {
             String entry = "${publishEntry.key}".toUpperCase()
             PublishArtifactType publishArtifactType = "${entry}" as PublishArtifactType
+            Map<String, String> item = publishEntry.value
             PublishItem publishItem = new PublishItem(
                 publishArtifactType,
-                publishEntry.value
+                item
             )
 
             publishItem.isPublish = _publishParams[publishArtifactType]
