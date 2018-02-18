@@ -29,8 +29,8 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        //zip()
-        archive()
+        this.zip()
+        this.archive()
     }
 
     abstract void bundle()
