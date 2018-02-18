@@ -1,5 +1,6 @@
 package settings.publish.types
 
+import org.apache.commons.io.FilenameUtils
 import settings.Settings
 import settings.publish.PublishItem
 
@@ -39,6 +40,7 @@ abstract class PublishType extends Settings {
         File zipDirectory = new File("${pathname}")
         zipDirectory.mkdirs()
         zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
+
         _steps.zip dir: "${origin}\\${publishItem.name}",
             glob: '*',
             zipFile: zipFile
@@ -47,7 +49,7 @@ abstract class PublishType extends Settings {
     void archive() {
         _steps.dir("${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip") {
             _steps.archiveArtifacts allowEmptyArchive: false,
-                artifacts: "${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip",
+                artifacts: FilenameUtils.getBaseName("${zipFile}"),
                 caseSensitive: false,
                 fingerprint: true
         }
