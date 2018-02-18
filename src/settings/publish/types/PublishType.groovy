@@ -29,7 +29,7 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        zip()
+        //zip()
         archive()
     }
 
