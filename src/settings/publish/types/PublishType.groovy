@@ -42,7 +42,7 @@ abstract class PublishType extends Settings {
         _zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
         _steps.zip dir: "${origin}\\${publishItem.name}",
             glob: '*',
-            zipFile: _zipFile
+            zipFile: "${_zipFile}"
     }
 
     private void archive() {
