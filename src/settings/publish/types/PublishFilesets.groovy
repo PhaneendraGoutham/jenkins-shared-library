@@ -10,7 +10,7 @@ class PublishFilesets extends PublishType {
 
     @Override
     def parseInclude() {
-        return "${publishItem.include}".tokenize(';')
+        return publishItem.include.tokenize(';')
     }
 
     @Override
