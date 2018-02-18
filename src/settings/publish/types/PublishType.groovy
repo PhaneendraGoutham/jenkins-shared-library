@@ -29,13 +29,13 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        zip()
+        blah()
         archive()
     }
 
     abstract void bundle()
 
-    private void zip() {
+    private void blah() {
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
         File zipDirectory = new File("${pathname}")
         zipDirectory.mkdirs()
