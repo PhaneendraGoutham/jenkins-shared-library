@@ -23,8 +23,8 @@ class PublishSettings extends Settings {
     }
 
     void publish() {
-        for(PublishItem publishItem in _publishItems) {
-            switch(publishItem.publishArtifactType) {
+        for (PublishItem publishItem in _publishItems) {
+            switch (publishItem.publishArtifactType) {
                 case PublishArtifactType.FILESETS:
                     PublishFilesets publishFilesets = new PublishFilesets(
                         _steps,
@@ -42,10 +42,10 @@ class PublishSettings extends Settings {
         for (def publishEntry in _publish) {
             String entry = "${publishEntry.key}".toUpperCase()
             PublishArtifactType publishArtifactType = "${entry}" as PublishArtifactType
-            Map<String, String> item = publishEntry.value
+            Map<String, String> item = publishEntry.value as Map<String, String>
             PublishItem publishItem = new PublishItem(
                 publishArtifactType,
-                item
+                item.collectEntries { [it.key, it.value] }
             )
 
             publishItem.isPublish = _publishParams[publishArtifactType]
