@@ -29,13 +29,13 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        this.zip()
-        this.archive()
+        zip()
+        archive()
     }
 
     abstract void bundle()
 
-    private void zip() {
+    void zip() {
         _steps.echo "zip()"
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
         File zipDirectory = new File("${pathname}")
@@ -48,7 +48,7 @@ abstract class PublishType extends Settings {
         */
     }
 
-    private void archive() {
+    void archive() {
         _steps.echo "archive()"
         /*
         _steps.archiveArtifacts allowEmptyArchive: false,
