@@ -29,26 +29,32 @@ abstract class PublishType extends Settings {
     void publish() {
         create()
         bundle()
-        blah()
+        zip()
         archive()
     }
 
     abstract void bundle()
 
-    private void blah() {
+    private void zip() {
+        _steps.echo "zip()"
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
         File zipDirectory = new File("${pathname}")
         zipDirectory.mkdirs()
+        /*
         _zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
         _steps.zip dir: "${origin}\\${publishItem.name}",
             glob: '*',
-            zipFile: "${_zipFile}"
+            zipFile: _zipFile
+        */
     }
 
     private void archive() {
+        _steps.echo "archive()"
+        /*
         _steps.archiveArtifacts allowEmptyArchive: false,
             artifacts: _zipFile,
             caseSensitive: false,
             fingerprint: true
+        */
     }
 }
