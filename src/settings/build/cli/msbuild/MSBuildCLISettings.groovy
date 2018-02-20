@@ -16,26 +16,31 @@ class MSBuildCLISettings extends CLISettings {
 
     @Override
     String setArgs() {
+        String file = ''
+        String properties = ''
+        String verbosity = ''
         for (def parameter in parameters) {
             String key = "${parameter.key}".toLowerCase()
             def value = parameter.value
             switch (key) {
                 case 'file':
-                    args += getFile("${value}")
+                    file += getFile("${value}")
                     break
                 case 'property':
-                    args += getProperties(value as Map<String, String>)
+                    properties += getProperties(value as Map<String, String>)
                     break
                 case 'verbosity':
-                    args += getVerbosity("${value}")
+                    verbosity += getVerbosity("${value}")
                     break
             }
         }
+
+        args = "${file} ${properties} ${verbosity}"
     }
 
     private String getFile(String value) {
         return sprintf(
-            ' "%1$s"',
+            '"%1$s"',
             [
                 "${value}"
             ]
@@ -43,7 +48,7 @@ class MSBuildCLISettings extends CLISettings {
     }
 
     private String getProperties(Map<String, String> properties) {
-        String arg = ' /property:'
+        String arg = '/property:'
         for (def property in properties) {
             String name = "${property.key}"
             String value = "${property.value}"
@@ -74,7 +79,7 @@ class MSBuildCLISettings extends CLISettings {
     }
 
     private String getVerbosity(String value) {
-        String arg = ' /verbosity:'
+        String arg = '/verbosity:'
         switch ("${value}".toLowerCase()) {
             case ['quiet', 'minimal', 'normal', 'detailed', 'diagnositc']:
                 arg += value
