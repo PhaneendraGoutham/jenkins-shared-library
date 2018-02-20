@@ -17,15 +17,17 @@ class MSBuildCLISettings extends CLISettings {
     @Override
     String setArgs() {
         for (def parameter in parameters) {
-            switch ("${parameter.key}".toLowerCase()) {
+            String key = "${parameter.key}".toLowerCase()
+            def value = parameter.value
+            switch (key) {
                 case 'file':
-                    args += getFile("${parameter.value}")
+                    args += getFile("${value}")
                     break
                 case 'property':
-                    args += getProperties(parameter.value as Map<String, String>)
+                    args += getProperties(value as Map<String, String>)
                     break
                 case 'verbosity':
-                    args += getVerbosity("${parameter.value}")
+                    args += getVerbosity("${value}")
                     break
             }
         }
