@@ -1,4 +1,6 @@
 import settings.build.BuildSettings
+import settings.build.CLIBuildSettings
+import settings.build.cli.CLISettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
@@ -25,6 +27,10 @@ NexusSettings getNexusSettings() {
 
 NuGetSettings getNuGetSettings() {
     nuGetSettings
+}
+
+CLIBuildSettings getCliBuildSettings() {
+    cliBuildSettings
 }
 
 BuildSettings getBuildSettings() {

@@ -1,6 +1,8 @@
 import constants.PipelineConstants
 import post.always.Notify
 import settings.build.BuildSettings
+import settings.build.CLIBuildSettings
+import settings.build.cli.CLISettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
@@ -164,6 +166,12 @@ def call(body) {
                 }
                 steps {
                     script {
+                        pipelineSettings.cliBuildSettings = new CLIBuildSettings(
+                            this,
+                            jenkinsfile.build.items
+                        )
+                        pipelineSettings.cliBuildSettings.create()
+
                         pipelineSettings.buildSettings = new BuildSettings(
                             this,
                             jenkinsfile.build.projects
