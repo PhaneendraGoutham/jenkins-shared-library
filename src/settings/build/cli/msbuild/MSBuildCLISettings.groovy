@@ -11,7 +11,7 @@ class MSBuildCLISettings extends CLISettings {
 
     @Override
     String setTool() {
-        return ToolConstants.MSBUILD
+        tool = ToolConstants.MSBUILD
     }
 
     @Override
