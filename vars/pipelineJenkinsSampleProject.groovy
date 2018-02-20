@@ -171,6 +171,7 @@ def call(body) {
                             jenkinsfile.build.items
                         )
                         pipelineSettings.cliBuildSettings.create()
+                        pipelineSettings.cliBuildSettings.build()
 
                         pipelineSettings.buildSettings = new BuildSettings(
                             this,
