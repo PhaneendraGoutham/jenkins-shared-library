@@ -36,7 +36,7 @@ class CLIBuildSettings extends Settings {
                     MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
                         _steps,
                         cliType,
-                        project['parameters']
+                        project.get('parameters')
                     )
                     msBuildCLISettings.create()
                     cliBuilds.add(msBuildCLISettings)
