@@ -32,9 +32,6 @@ class CLIBuildSettings extends Settings {
             String cli = "${project.get('cli')}".toUpperCase()
             CLIType cliType = "${cli}" as CLIType
             def parameters = project.get('parameters')
-            _steps.echo "cli: ${cli}"
-            _steps.echo "parameters: ${parameters}"
-            /*
             switch (cliType) {
                 case CLIType.MSBUILD:
                     MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
@@ -46,7 +43,6 @@ class CLIBuildSettings extends Settings {
                     cliBuilds.add(msBuildCLISettings)
                     break
             }
-            */
         }
     }
 }
