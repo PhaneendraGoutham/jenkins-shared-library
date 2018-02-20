@@ -30,21 +30,18 @@ class CLIBuildSettings extends Settings {
     private void populate() {
         for (def project in _projects) {
             String cli = "${project.get('cli')}"
-            _steps.echo "cli: ${cli}"
-            //CLIType cliType = "${cli}".toUpperCase() as CLIType
-            /*
+            CLIType cliType = "${cli}".toUpperCase() as CLIType
             switch (cliType) {
                 case CLIType.MSBUILD:
                     MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
                         _steps,
-                        CLIType.MSBUILD,
+                        cliType,
                         project['parameters']
                     )
                     msBuildCLISettings.create()
                     cliBuilds.add(msBuildCLISettings)
                     break
             }
-            */
         }
     }
 }
