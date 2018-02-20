@@ -45,8 +45,8 @@ class MSBuildCLISettings extends CLISettings {
     private String getProperties(Map<String, String> properties) {
         String arg = ' /property:'
         for (def property in properties) {
-            String name = property.key
-            String value = property.value
+            String name = "${property.key}"
+            String value = "${property.value}"
             switch ("${name}".toLowerCase()) {
                 case 'configuration':
                     arg += sprintf(

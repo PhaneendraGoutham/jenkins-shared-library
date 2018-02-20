@@ -31,17 +31,22 @@ class CLIBuildSettings extends Settings {
         for (def project in _projects) {
             String cli = "${project.get('cli')}".toUpperCase()
             CLIType cliType = "${cli}" as CLIType
+            Map parameters = project.get('parameters') as Map
+            _steps.echo "cli: ${cli}"
+            _steps.echo "parameters: ${parameters}"
+            /*
             switch (cliType) {
                 case CLIType.MSBUILD:
                     MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
                         _steps,
                         cliType,
-                        project.get('parameters') as Map
+                        parameters
                     )
                     msBuildCLISettings.create()
                     cliBuilds.add(msBuildCLISettings)
                     break
             }
+            */
         }
     }
 }
