@@ -31,7 +31,7 @@ class CLIBuildSettings extends Settings {
         for (def project in _projects) {
             String cli = "${project.get('cli')}".toUpperCase()
             CLIType cliType = "${cli}" as CLIType
-            Map parameters = project.get('parameters') as Map
+            def parameters = project.get('parameters')
             _steps.echo "cli: ${cli}"
             _steps.echo "parameters: ${parameters}"
             /*
