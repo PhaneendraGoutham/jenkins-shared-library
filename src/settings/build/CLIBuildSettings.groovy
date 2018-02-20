@@ -29,6 +29,8 @@ class CLIBuildSettings extends Settings {
 
     private void populate() {
         for (def project in _projects) {
+            _steps.echo "project: ${project}"
+            /*
             CLIType cliType = "${project['cli']}".toUpperCase() as CLIType
             switch (cliType) {
                 case CLIType.MSBUILD:
@@ -41,6 +43,7 @@ class CLIBuildSettings extends Settings {
                     cliBuilds.add(msBuildCLISettings)
                     break
             }
+            */
         }
     }
 }
