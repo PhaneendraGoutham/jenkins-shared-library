@@ -6,7 +6,7 @@ import settings.build.cli.CLIType
 import settings.build.cli.msbuild.MSBuildCLISettings
 
 class CLIBuildSettings extends Settings {
-    private Map _projects
+    private List<Map> _projects
 
     CLIBuildSettings(def steps,
                      def projects) {
