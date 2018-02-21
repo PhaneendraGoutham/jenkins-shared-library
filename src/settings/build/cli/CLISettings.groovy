@@ -40,7 +40,7 @@ abstract class CLISettings extends Settings {
         }
     }
 
-    private void setTool() {
+    void setTool() {
         switch (_cliType) {
             case CLIType.MSBUILD:
                 cliParameters.tool = ToolConstants.MSBUILD
