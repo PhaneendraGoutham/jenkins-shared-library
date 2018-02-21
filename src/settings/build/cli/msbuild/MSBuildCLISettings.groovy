@@ -19,8 +19,6 @@ class MSBuildCLISettings extends CLISettings {
         for (def parameter in cliParameters.parameters) {
             String key = "${parameter.key}".toLowerCase()
             def value = parameter.value
-            _steps.echo "key: ${key}"
-            _steps.echo "value: ${value}"
             switch (key) {
                 case 'file':
                     setFile(value.toString())
@@ -58,10 +56,11 @@ class MSBuildCLISettings extends CLISettings {
     }
 
     private void setFile(String value) {
+        _steps.echo "value: ${value}"
         file = sprintf(
             '"%1$s"',
             [
-                "${value}"
+                value
             ]
         )
     }
