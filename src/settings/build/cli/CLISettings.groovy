@@ -4,14 +4,11 @@ import constants.ToolConstants
 import settings.Settings
 
 abstract class CLISettings extends Settings {
-    private CLIType _cliType
-
     CLISettings(def steps,
                 CLIType cliType,
                 Map parameters) {
         super(steps)
-        _cliType = cliType
-        cliParameters = new CLIParameters(parameters)
+        cliParameters = new CLIParameters(cliType, parameters)
     }
 
     CLIParameters cliParameters
@@ -41,7 +38,7 @@ abstract class CLISettings extends Settings {
     }
 
     void setTool() {
-        switch (_cliType) {
+        switch (cliParameters.cliType) {
             case CLIType.MSBUILD:
                 cliParameters.tool = ToolConstants.MSBUILD
                 break
