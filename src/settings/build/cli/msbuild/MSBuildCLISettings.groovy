@@ -19,15 +19,17 @@ class MSBuildCLISettings extends CLISettings {
         for (def parameter in cliParameters.parameters) {
             String key = "${parameter.key}".toLowerCase()
             def value = parameter.value
+            _steps.echo "key: ${key}"
+            _steps.echo "value: ${value}"
             switch (key) {
                 case 'file':
-                    setFile(value)
+                    setFile(value.toString())
                     break
                 case 'property':
                     setProperties(value as Map<String, String>)
                     break
                 case 'verbosity':
-                    setVerbosity(value)
+                    setVerbosity(value.toString())
                     break
             }
         }
