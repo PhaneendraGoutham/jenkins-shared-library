@@ -6,15 +6,12 @@ import settings.Settings
 abstract class CLISettings extends Settings {
     private CLIType _cliType
 
-    private Map _parameters = [:]
-
     CLISettings(def steps,
                 CLIType cliType,
                 Map parameters) {
         super(steps)
         _cliType = cliType
-        _parameters = parameters
-        cliParameters = new CLIParameters(_parameters)
+        cliParameters = new CLIParameters(parameters)
     }
 
     CLIParameters cliParameters
