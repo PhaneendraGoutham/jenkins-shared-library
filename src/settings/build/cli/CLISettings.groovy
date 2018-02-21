@@ -14,13 +14,13 @@ abstract class CLISettings extends Settings {
         super(steps)
         _cliType = cliType
         _parameters = parameters
+        cliParameters = new CLIParameters(_parameters)
     }
 
     CLIParameters cliParameters
 
     @Override
     protected void init() {
-        cliParameters = new CLIParameters(_parameters)
         setTool()
         setFields()
         cliParameters.args = getArgs()
