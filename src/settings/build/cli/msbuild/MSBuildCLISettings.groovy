@@ -21,13 +21,13 @@ class MSBuildCLISettings extends CLISettings {
             def value = parameter.value
             switch (key) {
                 case 'file':
-                    setFile("${value}")
+                    setFile(value)
                     break
                 case 'property':
                     setProperties(value as Map<String, String>)
                     break
                 case 'verbosity':
-                    setVerbosity("${value}")
+                    setVerbosity(value)
                     break
             }
         }
