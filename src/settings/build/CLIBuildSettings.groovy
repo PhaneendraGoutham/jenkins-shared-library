@@ -23,7 +23,8 @@ class CLIBuildSettings extends Settings {
 
     void build() {
         for (CLISettings cliBuild in cliBuilds) {
-            cliBuild.issue()
+            //_steps.pipelineSettings.nuGetSettings.restore("${cliBuild.}")
+            cliBuild.run()
         }
     }
 

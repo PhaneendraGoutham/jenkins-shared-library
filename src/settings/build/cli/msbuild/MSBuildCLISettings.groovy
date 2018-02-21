@@ -1,6 +1,5 @@
 package settings.build.cli.msbuild
 
-import constants.ToolConstants
 import settings.build.cli.CLISettings
 import settings.build.cli.CLIType
 
@@ -9,37 +8,55 @@ class MSBuildCLISettings extends CLISettings {
         super(steps, cliType, parameters)
     }
 
-    @Override
-    String setTool() {
-        tool = ToolConstants.MSBUILD
-    }
+    String file = ''
+
+    Map<String, String> properties = [:]
+
+    String verbosity = ''
 
     @Override
-    String setArgs() {
-        String file = ''
-        String properties = ''
-        String verbosity = ''
-        for (def parameter in parameters) {
+    void setFields() {
+        for (def parameter in cliParameters.parameters) {
             String key = "${parameter.key}".toLowerCase()
             def value = parameter.value
             switch (key) {
                 case 'file':
-                    file += getFile("${value}")
+                    setFile("${value}")
                     break
                 case 'property':
-                    properties += getProperties(value as Map<String, String>)
+                    setProperties(value as Map<String, String>)
                     break
                 case 'verbosity':
-                    verbosity += getVerbosity("${value}")
+                    setVerbosity("${value}")
                     break
             }
         }
-
-        args = "${file} ${properties} ${verbosity}"
     }
 
-    private String getFile(String value) {
-        return sprintf(
+    @Override
+    String getArgs() {
+        String cliArgs = ''
+
+        cliArgs += file
+
+        cliArgs += ' /property:'
+        for (def property in properties) {
+            cliArgs += sprintf(
+                '%1$s="%2$s";',
+                [
+                    property.key,
+                    property.value
+                ]
+            )
+        }
+
+        cliArgs += ' /verbosity:' + verbosity
+
+        return cliArgs
+    }
+
+    private void setFile(String value) {
+        file = sprintf(
             '"%1$s"',
             [
                 "${value}"
@@ -47,47 +64,27 @@ class MSBuildCLISettings extends CLISettings {
         )
     }
 
-    private String getProperties(Map<String, String> properties) {
-        String arg = '/property:'
+    private void setProperties(Map<String, String> properties) {
         for (def property in properties) {
-            String name = "${property.key}"
+            String name = "${property.key}".toLowerCase()
             String value = "${property.value}"
-            switch ("${name}".toLowerCase()) {
-                case 'configuration':
-                    arg += sprintf(
-                        'configuration="%1$s";',
-                        [
-                            ((value?.trim()) as boolean)
-                                ? "${value}"
-                                : "${_steps.params.configuration}"
-                        ]
-                    )
-                    break
-                case 'platform':
-                    arg += sprintf(
-                        'platform="%1$s";',
-                        [
-                            ((value?.trim()) as boolean)
-                                ? "${value}"
-                                : "${_steps.params.platform}"
-                        ]
-                    )
-                    break
-            }
+            this.properties.put(
+                name,
+                ((value?.trim()) as boolean)
+                    ? "${value}"
+                    : "${_steps.params[name]}"
+            )
         }
-        return arg
     }
 
-    private String getVerbosity(String value) {
-        String arg = '/verbosity:'
+    private void setVerbosity(String value) {
         switch ("${value}".toLowerCase()) {
             case ['quiet', 'minimal', 'normal', 'detailed', 'diagnositc']:
-                arg += value
+                verbosity = value
                 break
             default:
-                arg += 'quiet'
+                verbosity = 'quiet'
                 break
         }
-        return arg
     }
 }

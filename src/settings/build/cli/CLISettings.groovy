@@ -1,44 +1,53 @@
 package settings.build.cli
 
+import constants.ToolConstants
 import settings.Settings
 
 abstract class CLISettings extends Settings {
+    private CLIType _cliType
+
+    private Map _parameters = [:]
+
     CLISettings(def steps,
                 CLIType cliType,
                 Map parameters) {
         super(steps)
-        this.cliType = cliType
-        this.parameters = parameters
+        _cliType = cliType
+        _parameters = parameters
     }
 
-    CLIType cliType
-
-    Map parameters = [:]
-
-    String tool = ''
-
-    String args = ''
+    CLIParameters cliParameters
 
     @Override
     protected void init() {
+        cliParameters = new CLIParameters(_parameters)
         setTool()
-        setArgs()
+        setFields()
+        cliParameters.args = getArgs()
     }
 
-    abstract String setTool()
+    abstract void setFields()
 
-    abstract String setArgs()
+    abstract String getArgs()
 
-    void issue() {
+    void run() {
         try {
             /*
             _steps.bat "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
-            _steps.bat "${tool} ${args}"
+            _steps.bat "${cliParameters.tool} ${cliParameters.args}"
             */
             _steps.echo "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
-            _steps.echo "${tool} ${args}"
+            _steps.echo "${cliParameters.tool} ${cliParameters.args}"
         } catch (error) {
             throw error
+        }
+    }
+
+    private void setTool() {
+        switch (_cliType) {
+            case CLIType.MSBUILD:
+                cliParameters.tool = ToolConstants.MSBUILD
+                break
         }
     }
 }
