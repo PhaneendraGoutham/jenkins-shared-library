@@ -18,23 +18,42 @@ class MSBuildCLISettings extends CLISettings {
     void setFields() {
         for (def parameter in cliParameters.parameters) {
             String key = "${parameter.key}".toLowerCase()
-            def value = parameter.value
-            _steps.echo "key: ${key}"
-            _steps.echo "value: ${value}"
-
-            /*
+            //def value = parameter.value
             switch (key) {
                 case 'file':
-                    setFile(value.toString())
+                    //setFile(value.toString())
+                    file = sprintf(
+                        '"%1$s"',
+                        [
+                            parameter.value
+                        ]
+                    )
                     break
                 case 'property':
-                    setProperties(value as Map<String, String>)
+                    //setProperties(value as Map<String, String>)
+                    for (def property in parameter.value as Map<String, String>) {
+                        String name = "${property.key}".toLowerCase()
+                        String value = "${property.value}"
+                        properties.put(
+                            name,
+                            ((value?.trim()) as boolean)
+                                ? "${value}"
+                                : "${_steps.params[name]}"
+                        )
+                    }
                     break
                 case 'verbosity':
-                    setVerbosity(value.toString())
+                    //setVerbosity(value.toString())
+                    switch ("${parameter.value}".toLowerCase()) {
+                        case ['quiet', 'minimal', 'normal', 'detailed', 'diagnositc']:
+                            verbosity = parameter.value
+                            break
+                        default:
+                            verbosity = 'quiet'
+                            break
+                    }
                     break
             }
-            */
         }
     }
 
