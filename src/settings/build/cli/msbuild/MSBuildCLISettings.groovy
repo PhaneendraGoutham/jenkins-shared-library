@@ -80,8 +80,8 @@ class MSBuildCLISettings extends CLISettings {
         return cliArgs
     }
 
+    /*
     private void setFile(String value) {
-        _steps.echo "value: ${value}"
         file = sprintf(
             '"%1$s"',
             [
@@ -113,4 +113,5 @@ class MSBuildCLISettings extends CLISettings {
                 break
         }
     }
+    */
 }
