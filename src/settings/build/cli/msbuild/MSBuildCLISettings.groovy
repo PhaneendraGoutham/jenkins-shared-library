@@ -31,7 +31,8 @@ class MSBuildCLISettings extends CLISettings {
                     break
                 case 'property':
                     //setProperties(value as Map<String, String>)
-                    for (def property in parameter.value as Map<String, String>) {
+                    def propertyMap = parameter.value as Map<String, String>
+                    for (def property in propertyMap) {
                         String name = "${property.key}".toLowerCase()
                         String value = "${property.value}"
                         properties.put(
