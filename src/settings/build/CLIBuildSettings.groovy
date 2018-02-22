@@ -14,7 +14,7 @@ class CLIBuildSettings extends Settings {
         _projects = projects
     }
 
-    List<CLISettings> cliBuilds = []
+    List<CLISettings> cliBundle = []
 
     @Override
     protected void init() {
@@ -22,9 +22,14 @@ class CLIBuildSettings extends Settings {
     }
 
     void build() {
-        for (CLISettings cliBuild in cliBuilds) {
-            //_steps.pipelineSettings.nuGetSettings.restore("${cliBuild.}")
-            cliBuild.run()
+        for (CLISettings cliSetting in cliBundle) {
+            switch (cliSetting) {
+                case { it instanceof MSBuildCLISettings }:
+                    MSBuildCLISettings msBuildCLISettings = cliSetting as MSBuildCLISettings
+                    _steps.pipelineSettings.nuGetSettings.restore("${msBuildCLISettings.file}")
+                    break
+            }
+            cliSetting.run()
         }
     }
 
@@ -41,7 +46,7 @@ class CLIBuildSettings extends Settings {
                         parameters
                     )
                     msBuildCLISettings.create()
-                    cliBuilds.add(msBuildCLISettings)
+                    cliBundle.add(msBuildCLISettings)
                     break
             }
         }

@@ -168,17 +168,10 @@ def call(body) {
                     script {
                         pipelineSettings.cliBuildSettings = new CLIBuildSettings(
                             this,
-                            jenkinsfile.build.items
+                            jenkinsfile.build.projects
                         )
                         pipelineSettings.cliBuildSettings.create()
                         pipelineSettings.cliBuildSettings.build()
-
-                        pipelineSettings.buildSettings = new BuildSettings(
-                            this,
-                            jenkinsfile.build.projects
-                        )
-                        pipelineSettings.buildSettings.create()
-                        pipelineSettings.buildSettings.build()
                     }
                 }
                 post {
