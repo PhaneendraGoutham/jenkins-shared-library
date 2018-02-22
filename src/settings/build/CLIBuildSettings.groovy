@@ -33,7 +33,8 @@ class CLIBuildSettings extends Settings {
             */
 
             if (cliSetting instanceof MSBuildCLISettings) {
-                _steps.echo "instanceof MSBuildCLISettings"
+                MSBuildCLISettings msBuildCLISettings = cliSetting
+                _steps.pipelineSettings.nuGetSettings.restore("${msBuildCLISettings.file}")
             }
 
             cliSetting.run()

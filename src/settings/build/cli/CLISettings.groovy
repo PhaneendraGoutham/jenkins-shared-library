@@ -26,10 +26,8 @@ abstract class CLISettings extends Settings {
 
     void run() {
         try {
-//            _steps.bat "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
-//            _steps.bat "${cliParameters.tool} ${cliParameters.args}"
-            _steps.echo "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
-            _steps.echo "${cliParameters.tool} ${cliParameters.args}"
+            _steps.bat "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
+            _steps.bat "${cliParameters.tool} ${cliParameters.args}"
         } catch (error) {
             throw error
         }
