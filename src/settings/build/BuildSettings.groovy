@@ -1,10 +1,12 @@
 package settings.build
 
 import settings.Settings
-import stages.build.MSBuild
+import settings.build.cli.CLISettings
+import settings.build.cli.CLIType
+import settings.build.cli.msbuild.MSBuildCLISettings
 
 class BuildSettings extends Settings {
-    private Map _projects
+    private List<Map> _projects
 
     BuildSettings(def steps,
                   def projects) {
@@ -12,7 +14,7 @@ class BuildSettings extends Settings {
         _projects = projects
     }
 
-    List<BuildItem> buildItems = []
+    List<CLISettings> cliSettings = []
 
     @Override
     protected void init() {
@@ -20,23 +22,32 @@ class BuildSettings extends Settings {
     }
 
     void build() {
-        MSBuild msBuild = new MSBuild(_steps)
-        for (BuildItem buildItem in buildItems) {
-            _steps.echo "Executing build workflow for item: [${buildItem.name}]."
-            _steps.pipelineSettings.nuGetSettings.restore("${buildItem.path}")
-            msBuild.setSwitchValues("${buildItem.configuration}", "${buildItem.platform}")
-            msBuild.compile("${buildItem.path}")
+        for (def cliSetting in cliSettings) {
+            if (cliSetting instanceof MSBuildCLISettings) {
+                MSBuildCLISettings msBuildCLISettings = cliSetting
+                _steps.pipelineSettings.nuGetSettings.restore("${msBuildCLISettings.file}")
+            }
+
+            cliSetting.run()
         }
     }
 
     private void populate() {
         for (def project in _projects) {
-            BuildItem buildItem = new BuildItem()
-            buildItem.name = "${project.key}"
-            buildItem.path = "${project.value['path']}"
-            buildItem.configuration = "${project.value['configuration']}"?.trim() ?: "${_steps.params.configuration}"
-            buildItem.platform = "${project.value['platform']}" ?: "${_steps.params.platform}"
-            buildItems.add(buildItem)
+            String cli = "${project.get(BuildConstants.CLI)}".toUpperCase()
+            CLIType cliType = "${cli}" as CLIType
+            def parameters = project.get(BuildConstants.PARAMETERS)
+            switch (cliType) {
+                case CLIType.MSBUILD:
+                    MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
+                        _steps,
+                        cliType,
+                        parameters
+                    )
+                    msBuildCLISettings.create()
+                    cliSettings.add(msBuildCLISettings)
+                    break
+            }
         }
     }
 }
