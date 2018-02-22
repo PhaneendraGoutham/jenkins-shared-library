@@ -22,13 +22,20 @@ class CLIBuildSettings extends Settings {
     }
 
     void build() {
-        for (CLISettings cliSetting in cliBundle) {
+        for (def cliSetting in cliBundle) {
+            /*
             switch (cliSetting) {
                 case { it instanceof MSBuildCLISettings }:
                     MSBuildCLISettings msBuildCLISettings = cliSetting as MSBuildCLISettings
                     _steps.pipelineSettings.nuGetSettings.restore("${msBuildCLISettings.file}")
                     break
             }
+            */
+
+            if (cliSetting instanceof MSBuildCLISettings) {
+                _steps.echo "instanceof MSBuildCLISettings"
+            }
+
             cliSetting.run()
         }
     }
