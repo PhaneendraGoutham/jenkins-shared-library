@@ -59,11 +59,10 @@ class MSBuildCLISettings extends CLISettings {
         String cliArgs = ''
 
         cliArgs += file
-
-        cliArgs += ' /property:'
+        
         for (def property in properties) {
             cliArgs += sprintf(
-                '%1$s="%2$s";',
+                ' /property:%1$s="%2$s"',
                 [
                     property.key,
                     property.value
