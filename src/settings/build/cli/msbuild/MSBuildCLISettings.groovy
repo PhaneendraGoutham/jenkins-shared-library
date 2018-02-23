@@ -65,7 +65,7 @@ class MSBuildCLISettings extends CLISettings {
 
         cliArgs += file
 
-        cliArgs += target?.trim() ?: target
+        cliArgs += target?.trim() ?: ' /target:' + target
 
         for (def property in properties) {
             cliArgs += sprintf(
