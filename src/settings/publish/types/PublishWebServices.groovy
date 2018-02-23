@@ -21,7 +21,8 @@ class PublishWebServices extends PublishType {
                 deployiisapppath: "${publishItem.extra['iissite']}\\${publishItem.name}",
                 outputpath      : ''
             ],
-            verbosity: 'quiet'
+            verbosity: 'quiet',
+            extra: publishItem.extra
         ]
 
         MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(

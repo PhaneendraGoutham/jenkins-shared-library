@@ -27,6 +27,10 @@ abstract class PublishType extends Settings {
     }
 
     void publish() {
+        if (!publishItem.isPublish) {
+            return
+        }
+
         create()
         bundle()
         zip()
