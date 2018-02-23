@@ -34,5 +34,6 @@ class PublishWebServices extends PublishType {
             parameters
         )
         msBuildCLISettings.create()
+        msBuildCLISettings.run()
     }
 }
