@@ -12,6 +12,9 @@ class PublishWebServices extends PublishType {
 
     @Override
     void bundle() {
+        final File outputPath = new File("${origin}\\${publishItem.name}")
+        outputPath.mkdirs()
+
         Map<String, String> parameters = [
             file     : publishItem.include,
             target   : 'package',
@@ -19,7 +22,7 @@ class PublishWebServices extends PublishType {
                 configuration   : "${_steps.params[MSBuildCLIConstants.CONFIGURATION]}",
                 platform        : "${_steps.params[MSBuildCLIConstants.PLATFORM]}",
                 deployiisapppath: "${publishItem.extra['iissite']}\\${publishItem.name}",
-                outputpath      : ''
+                outputpath      : "${outputPath.getAbsolutePath()}"
             ],
             verbosity: 'quiet',
             extra: publishItem.extra
