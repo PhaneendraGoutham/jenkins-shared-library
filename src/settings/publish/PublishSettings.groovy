@@ -2,6 +2,7 @@ package settings.publish
 
 import settings.Settings
 import settings.publish.types.PublishFilesets
+import settings.publish.types.PublishWebServices
 
 class PublishSettings extends Settings {
     private Map _publish
@@ -33,6 +34,11 @@ class PublishSettings extends Settings {
                     publishFilesets.publish()
                     break
                 case PublishArtifactType.WEBSERVICES:
+                    PublishWebServices publishWebServices = new PublishWebServices(
+                        _steps,
+                        publishItem
+                    )
+                    publishWebServices.publish()
                     break
             }
         }
@@ -45,7 +51,7 @@ class PublishSettings extends Settings {
             for (def publishSet in publishEntry.value) {
                 PublishItem publishItem = new PublishItem(
                     publishArtifactType,
-                    publishSet
+                    publishSet as Map
                 )
                 publishItem.isPublish = _publishParams[publishArtifactType]
                 _publishItems.add(publishItem)

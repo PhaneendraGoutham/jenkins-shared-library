@@ -2,16 +2,18 @@ package settings.publish
 
 class PublishItem implements Serializable {
     PublishItem(PublishArtifactType artifactType,
-                def publishSet) {
+                Map publishSet) {
         publishArtifactType = artifactType
         include = publishSet['include']
         name = publishSet['name']
         repository = publishSet['repository']
+        extra = publishSet.containsKey('extra') ?: [:]
     }
 
     PublishArtifactType publishArtifactType
     String include
     String name
     String repository
+    Map extra = [:]
     boolean isPublish
 }

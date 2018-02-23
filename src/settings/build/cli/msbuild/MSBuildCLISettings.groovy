@@ -10,6 +10,8 @@ class MSBuildCLISettings extends CLISettings {
 
     String file = ''
 
+    String target = ''
+
     Map<String, String> properties = [:]
 
     String verbosity = ''
@@ -26,6 +28,9 @@ class MSBuildCLISettings extends CLISettings {
                             parameter.value
                         ]
                     )
+                    break
+                case MSBuildCLIConstants.TARGET:
+                    target = parameter.value
                     break
                 case MSBuildCLIConstants.PROPERTY:
                     def propertyMap = parameter.value as Map<String, String>
@@ -59,6 +64,8 @@ class MSBuildCLISettings extends CLISettings {
         String cliArgs = ''
 
         cliArgs += file
+
+        cliArgs += target?.trim() ?: target
 
         for (def property in properties) {
             cliArgs += sprintf(
