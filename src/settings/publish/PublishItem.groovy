@@ -7,7 +7,7 @@ class PublishItem implements Serializable {
         include = publishSet['include']
         name = publishSet['name']
         repository = publishSet['repository']
-        extra = publishSet.containsKey('extra') ?: publishSet['extra']
+        extra = publishSet.containsKey('extra') ? publishSet['extra'] : [:]
     }
 
     PublishArtifactType publishArtifactType
