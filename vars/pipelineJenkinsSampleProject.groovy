@@ -287,13 +287,13 @@ def call(body) {
             success {
                 script {
                     pipelineSettings.vcsSettings.notify(0)
-                    //pipelineSettings.workspaceSettings.clean()
+                    pipelineSettings.workspaceSettings.clean()
                 }
             }
             unstable {
                 script {
                     pipelineSettings.vcsSettings.notify(0)
-                    //pipelineSettings.workspaceSettings.clean()
+                    pipelineSettings.workspaceSettings.clean()
                 }
             }
             failure {
