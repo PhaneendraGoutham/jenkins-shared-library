@@ -113,7 +113,7 @@ class VcsSettings extends Settings {
                     'push https://%1$s@%2$s --tags',
                     [
                         _steps.env.tagCredentials,
-                        "${_steps.pipelineSettings.gitSettings}".replace("https://", "")
+                        "${_steps.pipelineSettings.gitSettings.url}".replace("https://", "")
                     ])
                 _steps.bat "${tool} ${push}"
             }
