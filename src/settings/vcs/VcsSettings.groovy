@@ -26,8 +26,7 @@ class VcsSettings extends Settings {
                 String svc,
                 String scheme,
                 String host,
-                String project,
-                String repository) {
+                String project) {
         super(steps)
         _id = id
         _svc = "${svc}".toUpperCase()
@@ -35,7 +34,6 @@ class VcsSettings extends Settings {
         _scheme = scheme
         _host = host
         _project = project
-        _repository = repository
     }
 
     String commitsUri
@@ -43,6 +41,7 @@ class VcsSettings extends Settings {
 
     @Override
     protected void init() {
+        _repository = _steps.pipelineSettings.gitSettings.repository
         setCommitsUri()
         setStatusUri()
     }

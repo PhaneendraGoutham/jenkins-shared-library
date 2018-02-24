@@ -138,8 +138,7 @@ def call(body) {
                             "${jenkinsfile.vcs.svc}",
                             "${jenkinsfile.vcs.scheme}",
                             "${jenkinsfile.vcs.host}",
-                            "${jenkinsfile.vcs.project}",
-                            "${pipelineSettings.gitSettings.repository}"
+                            "${jenkinsfile.vcs.project}"
                         )
                         pipelineSettings.vcsSettings.create()
                         pipelineSettings.vcsSettings.notify(2)
