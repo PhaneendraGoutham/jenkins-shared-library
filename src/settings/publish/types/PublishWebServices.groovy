@@ -42,10 +42,10 @@ class PublishWebServices extends PublishType {
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
         File zipDirectory = new File("${pathname}")
         zipDirectory.mkdirs()
-        zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
+        publishItem.zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
 
         _steps.zip dir: "${origin}\\${publishItem.name}\\_PublishedWebsites\\${publishItem.name}_Package",
             glob: '*',
-            zipFile: zipFile
+            zipFile: publishItem.zipFile
     }
 }
