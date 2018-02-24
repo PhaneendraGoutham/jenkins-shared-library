@@ -1,14 +1,16 @@
 package settings.publish
 
+import constants.NexusConstants
 import settings.Settings
 import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishWebServices
+import steps.httprequest.HttpRequest
+import steps.httprequest.HttpRequestContentType
+import steps.httprequest.HttpRequestResponseHandle
 
 class PublishSettings extends Settings {
     private Map _publish
     private Map<PublishArtifactType, Boolean> _publishParams
-
-    private List<PublishItem> _publishItems = []
 
     PublishSettings(def steps,
                     def publish,
@@ -18,13 +20,15 @@ class PublishSettings extends Settings {
         _publishParams = publishParams
     }
 
+    List<PublishItem> publishItems = []
+
     @Override
     protected void init() {
         populate()
     }
 
     void publish() {
-        for (PublishItem publishItem in _publishItems) {
+        for (PublishItem publishItem in publishItems) {
             switch (publishItem.publishArtifactType) {
                 case PublishArtifactType.FILESETS:
                     PublishFilesets publishFilesets = new PublishFilesets(
@@ -44,6 +48,28 @@ class PublishSettings extends Settings {
         }
     }
 
+    void push() {
+        for (PublishItem publishItem in publishItems) {
+            if (!publishItem.isPublish) {
+                continue
+            }
+
+            String id = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['id']
+            String url = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['sdlc']
+            String zipFileName = new File("${publishItem.zipFile}").getName()
+            String artifact = "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${zipFileName}"
+
+            new HttpRequest(
+                _steps,
+                id
+            ).put(
+                HttpRequestContentType.APPLICATION_ZIP,
+                HttpRequestResponseHandle.NONE,
+                artifact
+            )
+        }
+    }
+
     private void populate() {
         for (def publishEntry in _publish) {
             String entry = "${publishEntry.key}".toUpperCase()
@@ -54,7 +80,7 @@ class PublishSettings extends Settings {
                     publishSet as Map
                 )
                 publishItem.isPublish = _publishParams[publishArtifactType]
-                _publishItems.add(publishItem)
+                publishItems.add(publishItem)
             }
         }
     }

@@ -271,6 +271,11 @@ def call(body) {
                             currentBuild.result = PipelineConstants.FAILURE
                         }
                     }
+                    success {
+                        script {
+                            pipelineSettings.publishSettings.push()
+                        }
+                    }
                 }
             }
         }
