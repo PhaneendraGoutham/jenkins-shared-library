@@ -1,3 +1,4 @@
+import constants.GitFlowConstants
 import constants.PipelineConstants
 import post.always.Notify
 import settings.build.BuildSettings
@@ -21,6 +22,7 @@ def call(body) {
     body.delegate = jenkinsfile
     body()
 
+    //region workspace settings
     pipelineSettings.workspaceSettings = new WorkspaceSettings(
         this,
         "${jenkinsfile.agent.node.workspace.drive}",
@@ -28,6 +30,7 @@ def call(body) {
         "${jenkinsfile.agent.node.workspace.leaf}"
     )
     pipelineSettings.workspaceSettings.create()
+    //endregion
 
     pipeline {
         agent {
@@ -136,7 +139,8 @@ def call(body) {
                             "${jenkinsfile.vcs.scheme}",
                             "${jenkinsfile.vcs.host}",
                             "${jenkinsfile.vcs.project}",
-                            "${pipelineSettings.gitSettings.repository}"
+                            "${pipelineSettings.gitSettings.repository}",
+                            "${pipelineSettings.gitSettings.version}"
                         )
                         pipelineSettings.vcsSettings.create()
                         pipelineSettings.vcsSettings.notify(2)
@@ -275,6 +279,19 @@ def call(body) {
                         script {
                             pipelineSettings.publishSettings.push()
                         }
+                    }
+                }
+            }
+
+            stage('tag') {
+                when {
+                    expression {
+                        return BRANCH_NAME == GitFlowConstants.MASTER
+                    }
+                }
+                steps {
+                    script {
+                        pipelineSettings.vcsSettings.tag()
                     }
                 }
             }

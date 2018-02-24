@@ -1,5 +1,7 @@
 package settings.vcs
 
+import constants.GitFlowConstants
+import constants.ToolConstants
 import groovy.json.JsonOutput
 import settings.Settings
 import steps.httprequest.HttpRequest
@@ -7,7 +9,7 @@ import steps.httprequest.HttpRequestContentType
 import steps.httprequest.HttpRequestResponseHandle
 
 class VcsSettings extends Settings {
-    private final String _label = "continuous-integration/jenkins"
+    private final String _label = 'continuous-integration/jenkins'
 
     private String _id
     private String _svc
@@ -16,6 +18,7 @@ class VcsSettings extends Settings {
     private String _host
     private String _project
     private String _repository
+    private String _version
 
     private def _requestBody
 
@@ -25,7 +28,8 @@ class VcsSettings extends Settings {
                 String scheme,
                 String host,
                 String project,
-                String repository) {
+                String repository,
+                String version) {
         super(steps)
         _id = id
         _svc = "${svc}".toUpperCase()
@@ -34,6 +38,7 @@ class VcsSettings extends Settings {
         _host = host
         _project = project
         _repository = repository
+        _version = version
     }
 
     String commitsUri
@@ -80,6 +85,45 @@ class VcsSettings extends Settings {
         }
 
         post()
+    }
+
+    void tag() {
+        if ("${_steps.BRANCH_NAME}" != GitFlowConstants.MASTER) {
+            return
+        }
+
+        String tool = ToolConstants.GIT
+        String args = sprintf(
+            'tag -a "%1$s" -m "%2$s"',
+            [
+                _version,
+                _label
+            ])
+
+        try {
+            _steps.bat "${tool} ${args}"
+        }
+        catch (error) {
+            _steps.echo "${error}"
+        }
+
+        try {
+            _steps.withCredentials([
+                _steps.usernameColonPassword(
+                    credentialsId: "${_id}",
+                    variable: 'tagCredentials')]) {
+                def pushArgs = sprintf(
+                    'push https://%1$s@%2$s --tags',
+                    [
+                        _steps.env.tagCredentials,
+                        _repository
+                    ])
+                _steps.bat "${tool} ${pushArgs}"
+            }
+        }
+        catch (error) {
+            _steps.echo "${error}"
+        }
     }
 
     private void populateGitHubRequestBody(GitHubState gitHubState) {
