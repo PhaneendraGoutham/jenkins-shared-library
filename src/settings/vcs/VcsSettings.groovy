@@ -18,7 +18,6 @@ class VcsSettings extends Settings {
     private String _host
     private String _project
     private String _repository
-    private String _version
 
     private def _requestBody
 
@@ -28,8 +27,7 @@ class VcsSettings extends Settings {
                 String scheme,
                 String host,
                 String project,
-                String repository,
-                String version) {
+                String repository) {
         super(steps)
         _id = id
         _svc = "${svc}".toUpperCase()
@@ -38,7 +36,6 @@ class VcsSettings extends Settings {
         _host = host
         _project = project
         _repository = repository
-        _version = version
     }
 
     String commitsUri
@@ -93,15 +90,15 @@ class VcsSettings extends Settings {
         }
 
         String tool = ToolConstants.GIT
-        String args = sprintf(
+        String tag = sprintf(
             'tag -a "%1$s" -m "%2$s"',
             [
-                _version,
+                _steps.pipelineSettings.gitSettings.version,
                 _label
             ])
 
         try {
-            _steps.bat "${tool} ${args}"
+            _steps.bat "${tool} ${tag}"
         }
         catch (error) {
             _steps.echo "${error}"
@@ -112,13 +109,13 @@ class VcsSettings extends Settings {
                 _steps.usernameColonPassword(
                     credentialsId: "${_id}",
                     variable: 'tagCredentials')]) {
-                def pushArgs = sprintf(
+                def push = sprintf(
                     'push https://%1$s@%2$s --tags',
                     [
                         _steps.env.tagCredentials,
-                        _repository
+                        "${_steps.pipelineSettings.gitSettings}".replace("https://", "")
                     ])
-                _steps.bat "${tool} ${pushArgs}"
+                _steps.bat "${tool} ${push}"
             }
         }
         catch (error) {

@@ -139,8 +139,7 @@ def call(body) {
                             "${jenkinsfile.vcs.scheme}",
                             "${jenkinsfile.vcs.host}",
                             "${jenkinsfile.vcs.project}",
-                            "${pipelineSettings.gitSettings.repository}",
-                            "${pipelineSettings.gitSettings.version}"
+                            "${pipelineSettings.gitSettings.repository}"
                         )
                         pipelineSettings.vcsSettings.create()
                         pipelineSettings.vcsSettings.notify(2)
