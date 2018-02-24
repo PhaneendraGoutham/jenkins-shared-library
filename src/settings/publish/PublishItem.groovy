@@ -15,6 +15,7 @@ class PublishItem implements Serializable {
     String name
     String repository
     Map extra = [:]
+
     boolean isPublish
     String zipFile
 }

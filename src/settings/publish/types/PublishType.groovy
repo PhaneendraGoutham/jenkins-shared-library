@@ -12,8 +12,10 @@ abstract class PublishType extends Settings {
     }
 
     protected static String origin
-    protected PublishItem publishItem
+
     protected def parsed
+
+    PublishItem publishItem
 
     @Override
     protected void init() {
