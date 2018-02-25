@@ -68,7 +68,7 @@ class DownstreamSettings extends Settings {
             _id
         ).get(
             HttpRequestContentType.APPLICATION_JSON,
-            HttpRequestResponseHandle.NONE,
+            HttpRequestResponseHandle.LEAVE_OPEN,
             "${_scheme}://${_host}:${_port}/crumbIssuer/api/json"
         )
 
