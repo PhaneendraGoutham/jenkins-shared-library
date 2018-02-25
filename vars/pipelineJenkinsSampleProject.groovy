@@ -2,6 +2,7 @@ import constants.GitFlowConstants
 import constants.PipelineConstants
 import post.always.Notify
 import settings.build.BuildSettings
+import settings.downstream.DownstreamSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
@@ -78,6 +79,10 @@ def call(body) {
             booleanParam(defaultValue: jenkinsfile.parameters.webservices,
                 description: 'Publish webservices defined in Jenkinsfile (build.artifacts.publish.webservices).',
                 name: 'webservices'
+            )
+            booleanParam(defaultValue: jenkinsfile.parameters.downstream,
+                description: 'Run downstream job(s) defined in Jenkinsfile (downstream.jobs).',
+                name: 'downstream'
             )
         }
 
@@ -290,6 +295,37 @@ def call(body) {
                 steps {
                     script {
                         pipelineSettings.vcsSettings.tag()
+                    }
+                }
+            }
+
+            stage('downstream') {
+                when {
+                    expression {
+                        return currentBuild.result == PipelineConstants.SUCCESS &&
+                            params.downstream &&
+                            jenkinsfile.get("downstream") as boolean
+                    }
+                }
+                steps {
+                    script {
+                        pipelineSettings.downstreamSettings = new DownstreamSettings(
+                            this,
+                            jenkinsfile.downstream.id,
+                            jenkinsfile.downstream.scheme,
+                            jenkinsfile.downstream.host,
+                            jenkinsfile.downstream.port,
+                            jenkinsfile.downstream.jobs
+                        )
+                        pipelineSettings.downstreamSettings.create()
+                        pipelineSettings.downstreamSettings.build()
+                    }
+                }
+                post {
+                    failure {
+                        script {
+                            currentBuild.result = PipelineConstants.UNSTABLE
+                        }
                     }
                 }
             }

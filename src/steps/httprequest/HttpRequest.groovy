@@ -19,9 +19,22 @@ class HttpRequest implements Serializable {
 
     }
 
-    String get(HttpRequestResponseHandle responseHandle,
+    String get(HttpRequestContentType contentType,
+               HttpRequestResponseHandle responseHandle,
+               String url,
                String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
-
+        try {
+            def response = _steps.httpRequest authentication: _authentication,
+                contentType: contentType.toString(),
+                httpMode: HttpRequestMode.GET.toString(),
+                responseHandle: "${responseHandle}",
+                url: "${url}",
+                validResponseCodes: validResponseCodes
+            String content = response.getContent()
+            return content
+        } catch (error) {
+            throw error
+        }
     }
 
     void post(HttpRequestContentType contentType,
@@ -34,6 +47,24 @@ class HttpRequest implements Serializable {
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.POST.toString(),
                 requestBody: "${requestBody}",
+                responseHandle: "${responseHandle}",
+                url: "${url}",
+                validResponseCodes: validResponseCodes
+        } catch (error) {
+            throw error
+        }
+    }
+
+    void post(HttpRequestContentType contentType,
+              HttpRequestResponseHandle responseHandle,
+              HttpRequestCustomHeaders customHeaders,
+              String url,
+              String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
+        try {
+            _steps.httpRequest authentication: _authentication,
+                contentType: contentType.toString(),
+                httpMode: HttpRequestMode.POST.toString(),
+                customHeaders: [[maskValue: customHeaders.maskValue, name: customHeaders.name, value: customHeaders.value]],
                 responseHandle: "${responseHandle}",
                 url: "${url}",
                 validResponseCodes: validResponseCodes

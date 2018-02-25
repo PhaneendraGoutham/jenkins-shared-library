@@ -1,4 +1,5 @@
 import settings.build.BuildSettings
+import settings.downstream.DownstreamSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
@@ -37,4 +38,8 @@ TestSettings getTestSettings() {
 
 PublishSettings getPublishSettings() {
     publishSettings
+}
+
+DownstreamSettings getDownstreamSettings() {
+    downstreamSettings
 }
