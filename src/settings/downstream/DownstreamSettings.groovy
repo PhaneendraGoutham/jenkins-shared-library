@@ -40,8 +40,8 @@ class DownstreamSettings extends Settings {
         String base = "${_scheme}://${_host}:${_port}"
         HttpRequestCustomHeaders customHeaders = new HttpRequestCustomHeaders(
             false,
-            _crumbRequestField,
-            _crumb
+            "${_crumbRequestField}",
+            "${_crumb}"
         )
 
         try {
