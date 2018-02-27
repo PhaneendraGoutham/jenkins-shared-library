@@ -12,8 +12,6 @@ class HttpRequest implements Serializable {
         _authentication = authentication
     }
 
-    String response
-
     void delete(HttpRequestResponseHandle responseHandle,
                 String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
 

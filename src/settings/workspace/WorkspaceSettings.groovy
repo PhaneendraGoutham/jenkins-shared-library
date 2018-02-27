@@ -4,6 +4,8 @@ import constants.GitFlowConstants
 import constants.PipelineConstants
 import settings.Settings
 
+import java.util.regex.Pattern
+
 class WorkspaceSettings extends Settings {
     private String _drive
     private String _root
@@ -70,7 +72,7 @@ class WorkspaceSettings extends Settings {
                 getBranchName()
             ])
 
-        artifactsWorkspace = customWorkspace.replaceFirst("${_root}", "tmp")
+        artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote("${_root}"), "tmp")
         File artifactsWorkspaceDirectory = new File("${artifactsWorkspace}")
         if (artifactsWorkspaceDirectory.exists() && artifactsWorkspaceDirectory.isDirectory()) {
             artifactsWorkspaceDirectory.deleteDir()

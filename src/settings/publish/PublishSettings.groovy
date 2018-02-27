@@ -49,13 +49,14 @@ class PublishSettings extends Settings {
     }
 
     void push() {
+        String id = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['id']
+        String url = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['sdlc']
+
         for (PublishItem publishItem in publishItems) {
             if (!publishItem.isPublish) {
                 continue
             }
 
-            String id = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['id']
-            String url = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['sdlc']
             String zipFileName = new File("${publishItem.zipFile}").getName()
             String artifact = "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${zipFileName}"
 
@@ -66,6 +67,24 @@ class PublishSettings extends Settings {
                 HttpRequestContentType.APPLICATION_ZIP,
                 HttpRequestResponseHandle.NONE,
                 artifact
+            )
+        }
+
+        _steps.dir(_steps.pipelineSettings.workspaceSettings.artifactsWorkspace) {
+            String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_steps.pipelineSettings.gitSettings.commit}.sha1"
+            File commit = new File("${pathname}")
+            commit.createNewFile()
+            for (def param in _steps.params) {
+                commit.write("${param.key}: ${param.value}")
+            }
+
+            new HttpRequest(
+                _steps,
+                id
+            ).put(
+                HttpRequestContentType.NOT_SET,
+                HttpRequestResponseHandle.NONE,
+                "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
         }
     }
