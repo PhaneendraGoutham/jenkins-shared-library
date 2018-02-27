@@ -83,7 +83,7 @@ class PublishSettings extends Settings {
                 _steps,
                 id
             ).put(
-                HttpRequestContentType.TEXT_HTML,
+                HttpRequestContentType.APPLICATION_TEXT,
                 HttpRequestResponseHandle.NONE,
                 "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
