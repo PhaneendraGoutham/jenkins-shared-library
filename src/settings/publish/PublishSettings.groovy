@@ -76,14 +76,13 @@ class PublishSettings extends Settings {
             commit.createNewFile()
             def newline = System.getProperty("line.separator")
             for (def param in _steps.params) {
-                commit.append("${newline}${param.key}: ${param.value}")
+                commit.append("${param.key}: ${param.value}${newline}")
             }
 
             new HttpRequest(
                 _steps,
                 id
             ).put(
-                HttpRequestContentType.NOT_SET,
                 HttpRequestResponseHandle.NONE,
                 "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
