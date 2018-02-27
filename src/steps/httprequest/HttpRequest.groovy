@@ -87,14 +87,12 @@ class HttpRequest implements Serializable {
         }
     }
 
-    void put(HttpRequestContentType contentType,
-             HttpRequestResponseHandle responseHandle,
+    void put(HttpRequestResponseHandle responseHandle,
              HttpRequestCustomHeaders customHeaders,
              String url,
              String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
-                contentType: contentType,
                 httpMode: HttpRequestMode.PUT.toString(),
                 customHeaders: [[maskValue: customHeaders.maskValue, name: customHeaders.name, value: customHeaders.value]],
                 responseHandle: "${responseHandle}",
