@@ -6,6 +6,7 @@ import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishWebServices
 import steps.httprequest.HttpRequest
 import steps.httprequest.HttpRequestContentType
+import steps.httprequest.HttpRequestCustomHeaders
 import steps.httprequest.HttpRequestResponseHandle
 
 class PublishSettings extends Settings {
@@ -83,8 +84,9 @@ class PublishSettings extends Settings {
                 _steps,
                 id
             ).put(
-                'application/text',
+                HttpRequestContentType.NOT_SET,
                 HttpRequestResponseHandle.NONE,
+                new HttpRequestCustomHeaders(false, 'Content-type', 'application/text'),
                 "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
         }
