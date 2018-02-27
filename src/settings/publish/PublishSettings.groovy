@@ -74,8 +74,9 @@ class PublishSettings extends Settings {
             String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_steps.pipelineSettings.gitSettings.commit}.sha1"
             File commit = new File("${pathname}")
             commit.createNewFile()
+            def newline = System.getProperty("line.separator")
             for (def param in _steps.params) {
-                commit.write("${param.key}: ${param.value}")
+                commit.append("${newline}${param.key}: ${param.value}")
             }
 
             new HttpRequest(
