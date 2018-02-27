@@ -52,14 +52,6 @@ def call(body) {
         }
 
         parameters {
-            /*
-            choice(choices: config.sourceControlManagement.stash.compareRestApiUri
-                ? "\n" + setRecentCommits("${BRANCH_NAME}", "${jenkinsfile.vcs.stash.compareRestApiUri}")
-                : "",
-                description: 'Recent Commit SHA1 Hashes (default is latest; selection builds that version)',
-                name: 'commitSha1'
-            )
-            */
             choice(choices: "${jenkinsfile.parameters.configuration}",
                 description: 'Project/Solution build configuration (e.g. Debug, Release).',
                 name: 'configuration'
