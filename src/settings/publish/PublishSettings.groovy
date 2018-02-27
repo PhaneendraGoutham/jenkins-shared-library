@@ -71,7 +71,7 @@ class PublishSettings extends Settings {
         }
 
         _steps.dir(_steps.pipelineSettings.workspaceSettings.artifactsWorkspace) {
-            String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_steps.pipelineSettings.gitSettings.commit}.sha1"
+            String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_steps.pipelineSettings.gitSettings.commit}.zip"
             File commit = new File("${pathname}")
             commit.createNewFile()
             def newline = System.getProperty("line.separator")
@@ -83,7 +83,7 @@ class PublishSettings extends Settings {
                 _steps,
                 id
             ).put(
-                HttpRequestContentType.APPLICATION_TEXT,
+                HttpRequestContentType.APPLICATION_ZIP,
                 HttpRequestResponseHandle.NONE,
                 "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
