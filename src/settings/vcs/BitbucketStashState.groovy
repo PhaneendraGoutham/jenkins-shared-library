@@ -1,6 +1,6 @@
 package settings.vcs
 
-enum StashState {
+enum BitbucketStashState {
     SUCCESSFUL,
     FAILED,
     INPROGRESS

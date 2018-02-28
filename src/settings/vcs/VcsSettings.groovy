@@ -48,22 +48,22 @@ class VcsSettings extends Settings {
 
     void setCommitsUri() {
         switch (_vcsService) {
+            case [VcsService.BITBUCKET, VcsService.STASH]:
+                commitsUri = "${_scheme}://${_host}/rest/api/1.0/projects/${_project}/repos/${_repository}/compare/commits"
+                break
             case VcsService.GITHUB:
                 commitsUri = "${_scheme}://api.${_host}/repos/${_project}/${_repository}/commits"
-                break
-            case VcsService.STASH:
-                commitsUri = "${_scheme}://${_host}/rest/api/1.0/projects/${_project}/repos/${_repository}/compare/commits"
                 break
         }
     }
 
     void setStatusUri() {
         switch (_vcsService) {
+            case [VcsService.BITBUCKET, VcsService.STASH]:
+                statusUri = "${_scheme}://${_host}/rest/build-status/1.0/commits"
+                break
             case VcsService.GITHUB:
                 statusUri = "${_scheme}://api.${_host}/repos/${_project}/${_repository}/statuses"
-                break
-            case VcsService.STASH:
-                statusUri = "${_scheme}://${_host}/rest/build-status/1.0/commits"
                 break
         }
 
@@ -72,11 +72,11 @@ class VcsSettings extends Settings {
 
     void notify(int state) {
         switch (_vcsService) {
+            case [VcsService.BITBUCKET, VcsService.STASH]:
+                populateBitbucketStashRequestBody(BitbucketStashState.values()[state])
+                break
             case VcsService.GITHUB:
                 populateGitHubRequestBody(GitHubState.values()[state])
-                break
-            case VcsService.STASH:
-                populateStashRequestBody(StashState.values()[state])
                 break
         }
 
@@ -122,6 +122,18 @@ class VcsSettings extends Settings {
         }
     }
 
+    private void populateBitbucketStashRequestBody(BitbucketStashState bitbucketStashState) {
+        _requestBody = JsonOutput.toJson(
+            [
+                state      : bitbucketStashState,
+                key        : "${_steps.pipelineSettings.gitSettings.version}",
+                name       : "${_steps.pipelineSettings.gitSettings.version}",
+                url        : "${_steps.env.BUILD_URL}".replace("%", "%%"),
+                description: "${_label}"
+            ]
+        )
+    }
+
     private void populateGitHubRequestBody(GitHubState gitHubState) {
         _requestBody = JsonOutput.toJson(
             [
@@ -129,18 +141,6 @@ class VcsSettings extends Settings {
                 target_url : "${_steps.env.BUILD_URL}".replace("%", "%%"),
                 description: "${_steps.pipelineSettings.gitSettings.version}",
                 context    : "${_label}"
-            ]
-        )
-    }
-
-    private void populateStashRequestBody(StashState stashState) {
-        _requestBody = JsonOutput.toJson(
-            [
-                state      : stashState,
-                key        : "${_steps.pipelineSettings.gitSettings.version}",
-                name       : "${_steps.pipelineSettings.gitSettings.version}",
-                url        : "${_steps.env.BUILD_URL}".replace("%", "%%"),
-                description: "${_label}"
             ]
         )
     }
