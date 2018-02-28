@@ -86,20 +86,4 @@ class HttpRequest implements Serializable {
             throw error
         }
     }
-
-    void put(HttpRequestResponseHandle responseHandle,
-             HttpRequestCustomHeaders customHeaders,
-             String url,
-             String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
-        try {
-            _steps.httpRequest authentication: _authentication,
-                httpMode: HttpRequestMode.PUT.toString(),
-                customHeaders: [[maskValue: customHeaders.maskValue, name: customHeaders.name, value: customHeaders.value]],
-                responseHandle: "${responseHandle}",
-                url: "${url}",
-                validResponseCodes: validResponseCodes
-        } catch (error) {
-            throw error
-        }
-    }
 }

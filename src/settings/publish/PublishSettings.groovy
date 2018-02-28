@@ -59,7 +59,15 @@ class PublishSettings extends Settings {
             }
 
             String zipFileName = new File("${publishItem.zipFile}").getName()
-            String artifact = "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${zipFileName}"
+            String artifact = sprintf(
+                '%1$s/%2$s/%3$s/%4$s/%5$s',
+                [
+                    url,
+                    _steps.pipelineSettings.gitSettings.repository,
+                    _steps.pipelineSettings.gitSettings.version,
+                    _steps.pipelineSettings.gitSettings.commit,
+                    zipFileName
+                ])
 
             new HttpRequest(
                 _steps,
@@ -68,25 +76,6 @@ class PublishSettings extends Settings {
                 HttpRequestContentType.APPLICATION_ZIP,
                 HttpRequestResponseHandle.NONE,
                 artifact
-            )
-        }
-
-        _steps.dir(_steps.pipelineSettings.workspaceSettings.artifactsWorkspace) {
-            String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\${_steps.pipelineSettings.gitSettings.commit}"
-            File commit = new File("${pathname}")
-            commit.createNewFile()
-            def newline = System.getProperty("line.separator")
-            for (def param in _steps.params) {
-                commit.append("${param.key}: ${param.value}${newline}")
-            }
-
-            new HttpRequest(
-                _steps,
-                id
-            ).put(
-                HttpRequestResponseHandle.NONE,
-                new HttpRequestCustomHeaders(false, 'Content-type', 'text/plain'),
-                "${url}/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${commit.getName()}"
             )
         }
     }
