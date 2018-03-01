@@ -131,7 +131,7 @@ class TestFramework implements Serializable {
             }
 
             if (option == NUnitConstants.IS32BIT) {
-                if (value == true) {
+                if (value.toBoolean()) {
                     _options += ' --x86'
                 }
                 continue

@@ -2,11 +2,11 @@ package settings.publish
 
 import constants.NexusConstants
 import settings.Settings
+import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishWebServices
 import steps.httprequest.HttpRequest
 import steps.httprequest.HttpRequestContentType
-import steps.httprequest.HttpRequestCustomHeaders
 import steps.httprequest.HttpRequestResponseHandle
 
 class PublishSettings extends Settings {
@@ -31,6 +31,13 @@ class PublishSettings extends Settings {
     void publish() {
         for (PublishItem publishItem in publishItems) {
             switch (publishItem.publishArtifactType) {
+                case PublishArtifactType.COLLECTIONS:
+                    PublishCollections publishCollections = new PublishCollections(
+                        _steps,
+                        publishItem
+                    )
+                    publishCollections.publish()
+                    break
                 case PublishArtifactType.FILESETS:
                     PublishFilesets publishFilesets = new PublishFilesets(
                         _steps,
