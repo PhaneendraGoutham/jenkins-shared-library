@@ -1,6 +1,5 @@
 package settings.publish.types
 
-import groovy.io.FileType
 import org.apache.commons.io.FileUtils
 import settings.publish.PublishItem
 
