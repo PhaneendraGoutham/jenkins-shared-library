@@ -24,8 +24,8 @@ class PublishCollections extends PublishType {
                 continue
             }
 
-            final File collectionDirectory = new File("${origin}\\${publishItem.name}")
-            collectionDirectory.mkdirs()
+            final File collectionsDirectory = new File("${origin}\\${publishItem.name}")
+            collectionsDirectory.mkdirs()
 
             _steps.echo "Copying items from collection [${collection}]..."
             for (String item in items) {
@@ -34,8 +34,8 @@ class PublishCollections extends PublishType {
                     continue
                 }
 
-                FileUtils.copyFileToDirectory(file, collectionDirectory)
-                _steps.echo "Copied item [${file}] to [${collectionDirectory.getAbsolutePath()}]."
+                FileUtils.copyFileToDirectory(file, collectionsDirectory)
+                _steps.echo "Copied item [${file}] to [${collectionsDirectory.getAbsolutePath()}]."
             }
         }
     }
