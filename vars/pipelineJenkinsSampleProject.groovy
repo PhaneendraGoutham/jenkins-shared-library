@@ -64,6 +64,10 @@ def call(body) {
                 description: 'Publish nupkg defined in Jenkinsfile (build.nuget.projects).',
                 name: 'nupkg'
             )
+            booleanParam(defaultValue: jenkinsfile.parameters.collections,
+                description: 'Publish collections defined in Jenkinsfile (build.artifacts.publish.collections).',
+                name: 'collections'
+            )
             booleanParam(defaultValue: jenkinsfile.parameters.filesets,
                 description: 'Publish filesets defined in Jenkinsfile (build.artifacts.publish.filesets).',
                 name: 'filesets'
@@ -246,12 +250,13 @@ def call(body) {
                     expression {
                         return currentBuild.result == PipelineConstants.SUCCESS &&
                             BRANCH_NAME ==~ "${jenkinsfile.directives.when.publish.branch}" &&
-                            (params.filesets || params.webservices)
+                            (params.collections || params.filesets || params.webservices)
                     }
                 }
                 steps {
                     script {
                         Map<PublishArtifactType, Boolean> publishParams = [:]
+                        publishParams.put(PublishArtifactType.COLLECTIONS, params.collections)
                         publishParams.put(PublishArtifactType.FILESETS, params.filesets)
                         publishParams.put(PublishArtifactType.WEBSERVICES, params.webservices)
 
