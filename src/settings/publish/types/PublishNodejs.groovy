@@ -1,12 +1,13 @@
 package settings.publish.types
 
+import constants.ToolConstants
 import settings.build.cli.CLIType
 import settings.build.cli.msbuild.MSBuildCLIConstants
 import settings.build.cli.msbuild.MSBuildCLISettings
 import settings.publish.PublishItem
 
-class PublishWebServices extends PublishType {
-    PublishWebServices(def steps, PublishItem publishItem) {
+class PublishNodejs extends PublishType {
+    PublishNodejs(def steps, PublishItem publishItem) {
         super(steps, publishItem)
     }
 
@@ -27,6 +28,22 @@ class PublishWebServices extends PublishType {
             verbosity: 'quiet',
             extra: publishItem.extra
         ]
+
+        _steps.retry(5) {
+            try {
+                File publishproj = new File("${_steps.env.WORKSPACE}\\${publishItem.include}")
+                String parent = publishproj.getParent()
+                _steps.dir(parent) {
+                    File node_modules = new File("${parent}\\node_modules")
+                    if (node_modules.isDirectory()) {
+                        node_modules.deleteDir()
+                    }
+                    _steps.bat "${ToolConstants.NPM} install"
+                }
+            } catch (error) {
+                throw error
+            }
+        }
 
         MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
             _steps,

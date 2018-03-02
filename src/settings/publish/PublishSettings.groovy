@@ -4,6 +4,7 @@ import constants.NexusConstants
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
+import settings.publish.types.PublishNodejs
 import settings.publish.types.PublishWebServices
 import steps.httprequest.HttpRequest
 import steps.httprequest.HttpRequestContentType
@@ -45,12 +46,22 @@ class PublishSettings extends Settings {
                     )
                     publishFilesets.publish()
                     break
+                case PublishArtifactType.NODEJS:
+                    PublishNodejs publishNodejs = new PublishNodejs(
+                        _steps,
+                        publishItem
+                    )
+                    publishNodejs.publish()
+                    break
                 case PublishArtifactType.WEBSERVICES:
                     PublishWebServices publishWebServices = new PublishWebServices(
                         _steps,
                         publishItem
                     )
                     publishWebServices.publish()
+                    break
+                default:
+                    throw "Publish artifact type [${publishItem.publishArtifactType}] not supported."
                     break
             }
         }

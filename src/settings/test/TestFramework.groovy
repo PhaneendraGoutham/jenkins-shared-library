@@ -58,16 +58,12 @@ class TestFramework implements Serializable {
                         testResults: "${_result}"
                     break
                 case TestTool.NUNIT:
-                    if (_status == 0) {
-                        _steps.nunit debug: false,
-                            failIfNoResults: false,
-                            keepJUnitReports: true,
-                            skipJUnitArchiver: false,
-                            testResultsPattern: "/nunit/*.xml"
-                        result = true
-                    } else {
-                        _steps.echo "NUnit test status is [${_status}]; will not archive."
-                    }
+                    _steps.nunit debug: false,
+                        failIfNoResults: false,
+                        keepJUnitReports: true,
+                        skipJUnitArchiver: false,
+                        testResultsPattern: "/nunit/*.xml"
+                    result = false
                     break
                 default:
                     throw "Tool not defined for [${_testTool}]."

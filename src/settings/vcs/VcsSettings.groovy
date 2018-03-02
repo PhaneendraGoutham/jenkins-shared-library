@@ -128,7 +128,7 @@ class VcsSettings extends Settings {
                 state      : bitbucketStashState,
                 key        : "${_steps.pipelineSettings.gitSettings.version}",
                 name       : "${_steps.pipelineSettings.gitSettings.version}",
-                url        : "${_steps.env.BUILD_URL}".replace("%", "%%"),
+                url        : "${_steps.env.BUILD_URL}",
                 description: "${_label}"
             ]
         )
