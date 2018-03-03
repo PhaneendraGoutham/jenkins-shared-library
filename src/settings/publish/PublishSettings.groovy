@@ -109,9 +109,9 @@ class PublishSettings extends Settings {
             ],
                 credentialsId: id,
                 groupId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}",
-                nexusUrl: url,
+                nexusUrl: 'desktop-nns09r8:8081',
                 nexusVersion: 'nexus3',
-                protocol: '',
+                protocol: 'http',
                 repository: 'raw-private-sdlc',
                 version: null
         }
