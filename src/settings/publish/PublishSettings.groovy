@@ -76,8 +76,7 @@ class PublishSettings extends Settings {
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 
-            File zipFile = new File("${publishItem.zipFile}")
-            String zipFileName = zipFile.getName()
+            String zipFileName = new File("${publishItem.zipFile}").getName()
             publishItem.artifactUrl = sprintf(
                 '%1$s/%2$s/%3$s/%4$s/%5$s',
                 [
@@ -88,17 +87,32 @@ class PublishSettings extends Settings {
                     zipFileName
                 ])
 
-            _steps.dir(zipFile.getParent()) {
-                new HttpRequest(
-                    _steps,
-                    id
-                ).put(
-                    HttpRequestContentType.APPLICATION_ZIP,
-                    HttpRequestResponseHandle.NONE,
-                    zipFileName,
-                    publishItem.artifactUrl
-                )
-            }
+            /*
+            new HttpRequest(
+                _steps,
+                id
+            ).put(
+                HttpRequestContentType.APPLICATION_ZIP,
+                HttpRequestResponseHandle.NONE,
+                publishItem.artifactUrl
+            )
+            */
+
+            _steps.nexusArtifactUploader artifacts: [
+                [
+                    artifactId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}/${zipFileName}",
+                    classifier: '',
+                    file      : publishItem.zipFile,
+                    type      : 'zip'
+                ]
+            ],
+                credentialsId: id,
+                groupId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}",
+                nexusUrl: url,
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                repository: 'raw-private-sdlc',
+                version: _steps.pipelineSettings.gitSettings.version
         }
     }
 
