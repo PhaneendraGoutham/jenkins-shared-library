@@ -74,7 +74,8 @@ class PublishSettings extends Settings {
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 
-            String zipFileName = new File("${publishItem.zipFile}").getName()
+            File zipFile = new File("${publishItem.zipFile}")
+            String zipFileName = zipFile.getName()
             publishItem.artifactUrl = sprintf(
                 '%1$s/%2$s/%3$s/%4$s/%5$s',
                 [
@@ -94,7 +95,7 @@ class PublishSettings extends Settings {
                     '-X PUT -u %1$s -T "%2$s" "%3$s"',
                     [
                         "${_steps.env.nexusUsernameColonPassword}",
-                        zipFileName,
+                        zipFile.getAbsolutePath(),
                         publishItem.artifactUrl
                     ]
                 )
