@@ -10,6 +10,10 @@ import steps.httprequest.HttpRequest
 import steps.httprequest.HttpRequestContentType
 import steps.httprequest.HttpRequestResponseHandle
 
+import java.nio.file.Files
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
 class PublishSettings extends Settings {
     private Map _publish
     private Map<PublishArtifactType, Boolean> _publishParams
@@ -89,32 +93,17 @@ class PublishSettings extends Settings {
                     zipFileName
                 ])
 
-            /*
+            byte[] bytes = Files.readAllBytes(zipFile.getAbsolutePath())
+
             new HttpRequest(
                 _steps,
                 id
             ).put(
-                HttpRequestContentType.APPLICATION_ZIP,
+                HttpRequestContentType.APPLICATION_OCTETSTREAM,
                 HttpRequestResponseHandle.NONE,
+                bytes,
                 publishItem.artifactUrl
             )
-            */
-
-            _steps.nexusArtifactUploader artifacts: [
-                [
-                    artifactId: publishItem.name,
-                    classifier: '',
-                    file      : publishItem.zipFile,
-                    type      : 'zip'
-                ]
-            ],
-                credentialsId: id,
-                groupId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}",
-                nexusUrl: 'desktop-nns09r8:8081',
-                nexusVersion: 'nexus3',
-                protocol: 'http',
-                repository: 'raw-private-sdlc',
-                version: "${_steps.pipelineSettings.gitSettings.version}"
         }
     }
 
