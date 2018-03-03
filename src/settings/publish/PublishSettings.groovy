@@ -1,18 +1,11 @@
 package settings.publish
 
-import org.apache.commons.io.FilenameUtils
+import constants.ToolConstants
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishNodejs
 import settings.publish.types.PublishWebServices
-import steps.httprequest.HttpRequest
-import steps.httprequest.HttpRequestContentType
-import steps.httprequest.HttpRequestResponseHandle
-
-import java.nio.file.Files
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 class PublishSettings extends Settings {
     private Map _publish
@@ -81,8 +74,7 @@ class PublishSettings extends Settings {
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 
-            File zipFile = new File("${publishItem.zipFile}")
-            String zipFileName = zipFile.getName()
+            String zipFileName = new File("${publishItem.zipFile}").getName()
             publishItem.artifactUrl = sprintf(
                 '%1$s/%2$s/%3$s/%4$s/%5$s',
                 [
@@ -93,17 +85,21 @@ class PublishSettings extends Settings {
                     zipFileName
                 ])
 
-            byte[] bytes = Files.readAllBytes(zipFile.getAbsolutePath())
-
-            new HttpRequest(
-                _steps,
-                id
-            ).put(
-                HttpRequestContentType.APPLICATION_OCTETSTREAM,
-                HttpRequestResponseHandle.NONE,
-                bytes,
-                publishItem.artifactUrl
-            )
+            _steps.withCredentials([
+                _steps.usernameColonPassword(
+                    credentialsId: id,
+                    variable: 'nexusUsernameColonPassword')]) {
+                String tool = ToolConstants.CURL
+                String args = sprintf(
+                    '-X PUT -u %1$s -T "%2$s" "%3$s"',
+                    [
+                        "${_steps.env.nexusUsernameColonPassword}",
+                        zipFileName,
+                        publishItem.artifactUrl
+                    ]
+                )
+                _steps.bat "${tool} ${args}"
+            }
         }
     }
 

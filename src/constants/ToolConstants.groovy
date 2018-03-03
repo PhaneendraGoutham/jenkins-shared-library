@@ -2,6 +2,7 @@ package constants
 
 class ToolConstants {
     static final String ROOT = 'd:\\.devops\\'
+    static final String CURL = '"c:\\program files\\curl\\bin\\curl.exe"'
     static final String GIT = '"c:\\program files\\git\\bin\\git.exe"'
     static final String GITVERSION = ROOT + '.gitversion\\gitversion.exe'
     static final String MSBUILD = '"c:\\program files (x86)\\msbuild\\14.0\\bin\\msbuild.exe"'
