@@ -1,5 +1,6 @@
 package settings.publish
 
+import org.apache.commons.io.FilenameUtils
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
@@ -101,7 +102,7 @@ class PublishSettings extends Settings {
 
             _steps.nexusArtifactUploader artifacts: [
                 [
-                    artifactId: '',
+                    artifactId: FilenameUtils.getBaseName(zipFileName),
                     classifier: '',
                     file      : publishItem.zipFile,
                     type      : 'zip'
