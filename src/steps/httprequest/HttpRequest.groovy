@@ -17,13 +17,14 @@ class HttpRequest implements Serializable {
 
     }
 
-    String get(HttpRequestContentType contentType,
+    String get(boolean consoleLogResponseBody = false,
+               HttpRequestContentType contentType,
                HttpRequestResponseHandle responseHandle,
                String url,
                String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             def response = _steps.httpRequest authentication: _authentication,
-                consoleLogResponseBody: true,
+                consoleLogResponseBody: consoleLogResponseBody,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.GET.toString(),
                 responseHandle: "${responseHandle}",
@@ -36,14 +37,15 @@ class HttpRequest implements Serializable {
         }
     }
 
-    void post(HttpRequestContentType contentType,
+    void post(boolean consoleLogResponseBody = false,
+              HttpRequestContentType contentType,
               HttpRequestResponseHandle responseHandle,
               String requestBody,
               String url,
               String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
-                consoleLogResponseBody: true,
+                consoleLogResponseBody: consoleLogResponseBody,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.POST.toString(),
                 requestBody: "${requestBody}",
@@ -55,14 +57,15 @@ class HttpRequest implements Serializable {
         }
     }
 
-    void post(HttpRequestContentType contentType,
+    void post(boolean consoleLogResponseBody = false,
+              HttpRequestContentType contentType,
               HttpRequestResponseHandle responseHandle,
               HttpRequestCustomHeaders customHeaders,
               String url,
               String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
-                consoleLogResponseBody: true,
+                consoleLogResponseBody: consoleLogResponseBody,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.POST.toString(),
                 customHeaders: [[maskValue: customHeaders.maskValue, name: customHeaders.name, value: customHeaders.value]],
@@ -74,13 +77,14 @@ class HttpRequest implements Serializable {
         }
     }
 
-    void put(HttpRequestContentType contentType,
+    void put(boolean consoleLogResponseBody = false,
+             HttpRequestContentType contentType,
              HttpRequestResponseHandle responseHandle,
              String url,
              String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
-                consoleLogResponseBody: true,
+                consoleLogResponseBody: consoleLogResponseBody,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.PUT.toString(),
                 responseHandle: "${responseHandle}",
