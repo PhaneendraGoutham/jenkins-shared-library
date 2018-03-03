@@ -25,7 +25,7 @@ class PublishWebServices extends PublishType {
                 outputpath      : "${outputPath.getAbsolutePath()}"
             ],
             verbosity: 'quiet',
-            extra: publishItem.extra
+            extra    : publishItem.extra
         ]
 
         MSBuildCLISettings msBuildCLISettings = new MSBuildCLISettings(
@@ -39,13 +39,8 @@ class PublishWebServices extends PublishType {
 
     @Override
     void zip() {
-        String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
-        File zipDirectory = new File("${pathname}")
-        zipDirectory.mkdirs()
-        publishItem.zipFile = "${zipDirectory.getAbsolutePath()}\\${publishItem.name}.${_steps.pipelineSettings.gitSettings.version}.zip"
-
         _steps.zip dir: "${origin}\\${publishItem.name}\\_PublishedWebsites\\${publishItem.name}_Package",
             glob: '*',
-            zipFile: publishItem.zipFile
+            zipFile: publishItem.zipFile.getAbsolutePath()
     }
 }

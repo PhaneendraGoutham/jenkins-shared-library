@@ -17,6 +17,6 @@ class PublishItem implements Serializable {
     Map extra = [:]
 
     boolean isPublish
-    String zipFile
+    File zipFile
     String artifactUrl
 }
