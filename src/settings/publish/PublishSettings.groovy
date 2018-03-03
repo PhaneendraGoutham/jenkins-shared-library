@@ -100,7 +100,7 @@ class PublishSettings extends Settings {
 
             _steps.nexusArtifactUploader artifacts: [
                 [
-                    artifactId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}/${zipFileName}",
+                    artifactId: '',
                     classifier: '',
                     file      : publishItem.zipFile,
                     type      : 'zip'
