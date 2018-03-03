@@ -102,7 +102,7 @@ class PublishSettings extends Settings {
 
             _steps.nexusArtifactUploader artifacts: [
                 [
-                    artifactId: FilenameUtils.getBaseName(zipFileName),
+                    artifactId: publishItem.name,
                     classifier: '',
                     file      : publishItem.zipFile,
                     type      : 'zip'
@@ -114,7 +114,7 @@ class PublishSettings extends Settings {
                 nexusVersion: 'nexus3',
                 protocol: 'http',
                 repository: 'raw-private-sdlc',
-                version: null
+                version: "${_steps.pipelineSettings.gitSettings.version}"
         }
     }
 
