@@ -1,7 +1,5 @@
 package settings.publish
 
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
@@ -103,7 +101,7 @@ class PublishSettings extends Settings {
 
             _steps.nexusArtifactUploader artifacts: [
                 [
-                    artifactId: FilenameUtils.getBaseName(zipFileName),
+                    artifactId: '',
                     classifier: '',
                     file      : publishItem.zipFile,
                     type      : 'zip'
@@ -113,7 +111,7 @@ class PublishSettings extends Settings {
                 groupId: "/${_steps.pipelineSettings.gitSettings.repository}/${_steps.pipelineSettings.gitSettings.version}/${_steps.pipelineSettings.gitSettings.commit}",
                 nexusUrl: url,
                 nexusVersion: 'nexus3',
-                protocol: 'http',
+                protocol: '',
                 repository: 'raw-private-sdlc',
                 version: null
         }
