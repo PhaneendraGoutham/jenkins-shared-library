@@ -18,4 +18,5 @@ class PublishItem implements Serializable {
 
     boolean isPublish
     String zipFile
+    String artifactUrl
 }

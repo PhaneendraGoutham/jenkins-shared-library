@@ -23,6 +23,7 @@ class HttpRequest implements Serializable {
                String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             def response = _steps.httpRequest authentication: _authentication,
+                consoleLogResponseBody: true,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.GET.toString(),
                 responseHandle: "${responseHandle}",
@@ -42,6 +43,7 @@ class HttpRequest implements Serializable {
               String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
+                consoleLogResponseBody: true,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.POST.toString(),
                 requestBody: "${requestBody}",
@@ -60,6 +62,7 @@ class HttpRequest implements Serializable {
               String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
+                consoleLogResponseBody: true,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.POST.toString(),
                 customHeaders: [[maskValue: customHeaders.maskValue, name: customHeaders.name, value: customHeaders.value]],
@@ -77,6 +80,7 @@ class HttpRequest implements Serializable {
              String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
             _steps.httpRequest authentication: _authentication,
+                consoleLogResponseBody: true,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.PUT.toString(),
                 responseHandle: "${responseHandle}",

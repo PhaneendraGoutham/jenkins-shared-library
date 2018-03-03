@@ -1,6 +1,5 @@
 package settings.publish
 
-import constants.NexusConstants
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
@@ -68,16 +67,17 @@ class PublishSettings extends Settings {
     }
 
     void push() {
-        String id = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['id']
-        String url = _steps.pipelineSettings.nexusSettings.repositories[NexusConstants.RAW]['sdlc']
-
         for (PublishItem publishItem in publishItems) {
             if (!publishItem.isPublish) {
                 continue
             }
 
+            String repository = publishItem.repository
+            String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
+            String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
+
             String zipFileName = new File("${publishItem.zipFile}").getName()
-            String artifact = sprintf(
+            publishItem.artifactUrl = sprintf(
                 '%1$s/%2$s/%3$s/%4$s/%5$s',
                 [
                     url,
@@ -93,7 +93,7 @@ class PublishSettings extends Settings {
             ).put(
                 HttpRequestContentType.APPLICATION_ZIP,
                 HttpRequestResponseHandle.NONE,
-                artifact
+                publishItem.artifactUrl
             )
         }
     }
