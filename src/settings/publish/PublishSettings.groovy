@@ -1,5 +1,7 @@
 package settings.publish
 
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import settings.Settings
 import settings.publish.types.PublishCollections
 import settings.publish.types.PublishFilesets
@@ -76,7 +78,8 @@ class PublishSettings extends Settings {
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 
-            String zipFileName = new File("${publishItem.zipFile}").getName()
+            File zipFile = new File("${publishItem.zipFile}")
+            String zipFileName = zipFile.getName()
             publishItem.artifactUrl = sprintf(
                 '%1$s/%2$s/%3$s/%4$s/%5$s',
                 [
@@ -100,7 +103,7 @@ class PublishSettings extends Settings {
 
             _steps.nexusArtifactUploader artifacts: [
                 [
-                    artifactId: '',
+                    artifactId: FilenameUtils.getBaseName(zipFileName),
                     classifier: '',
                     file      : publishItem.zipFile,
                     type      : 'zip'
@@ -112,7 +115,7 @@ class PublishSettings extends Settings {
                 nexusVersion: 'nexus3',
                 protocol: 'http',
                 repository: 'raw-private-sdlc',
-                version: _steps.pipelineSettings.gitSettings.version
+                version: null
         }
     }
 
