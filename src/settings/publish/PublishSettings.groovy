@@ -93,6 +93,7 @@ class PublishSettings extends Settings {
             ).put(
                 HttpRequestContentType.APPLICATION_ZIP,
                 HttpRequestResponseHandle.NONE,
+                publishItem.zipFile,
                 publishItem.artifactUrl
             )
         }
