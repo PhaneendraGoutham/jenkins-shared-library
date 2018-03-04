@@ -9,15 +9,16 @@ import settings.publish.types.PublishWebServices
 
 class PublishSettings extends Settings {
     private Map _publish
-    private Map<PublishArtifactType, Boolean> _publishParams
 
     PublishSettings(def steps,
                     def publish,
                     Map<PublishArtifactType, Boolean> publishParams) {
         super(steps)
         _publish = publish
-        _publishParams = publishParams
+        this.publishParams = publishParams
     }
+
+    Map<PublishArtifactType, Boolean> publishParams
 
     List<PublishItem> publishItems = []
 
@@ -112,7 +113,7 @@ class PublishSettings extends Settings {
                     publishArtifactType,
                     publishSet as Map
                 )
-                publishItem.isPublish = _publishParams[publishArtifactType]
+                publishItem.isPublish = publishParams[publishArtifactType]
                 publishItems.add(publishItem)
             }
         }

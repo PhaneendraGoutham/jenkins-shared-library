@@ -12,5 +12,13 @@ abstract class DeployEngine extends Settings {
 
     protected DeployItem deployItem
 
-    abstract void deploy()
+    @Override
+    protected void init() {}
+
+    void deploy() {
+        create()
+        install()
+    }
+
+    abstract void install()
 }
