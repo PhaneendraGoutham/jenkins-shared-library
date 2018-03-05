@@ -4,5 +4,7 @@ enum PublishArtifactType {
     COMPILED,
     FILESETS,
     NODEJS,
-    WEBSERVICES
+    SQLPACKAGES,
+    WEBSERVICES,
+    WINDOWSSERVICES
 }

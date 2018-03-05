@@ -1,4 +1,5 @@
 import settings.build.BuildSettings
+import settings.deploy.DeploySettings
 import settings.downstream.DownstreamSettings
 import settings.git.GitSettings
 import settings.nexus.NexusSettings
@@ -38,6 +39,10 @@ TestSettings getTestSettings() {
 
 PublishSettings getPublishSettings() {
     publishSettings
+}
+
+DeploySettings getDeploySettings() {
+    deploySettings
 }
 
 DownstreamSettings getDownstreamSettings() {

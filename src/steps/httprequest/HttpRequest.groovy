@@ -80,7 +80,6 @@ class HttpRequest implements Serializable {
     void put(boolean consoleLogResponseBody = false,
              HttpRequestContentType contentType,
              HttpRequestResponseHandle responseHandle,
-             String requestBody,
              String url,
              String validResponseCodes = DEFAULT_VALID_RESPONSE_CODES) {
         try {
@@ -88,7 +87,6 @@ class HttpRequest implements Serializable {
                 consoleLogResponseBody: consoleLogResponseBody,
                 contentType: contentType.toString(),
                 httpMode: HttpRequestMode.PUT.toString(),
-                requestBody: "${requestBody}",
                 responseHandle: "${responseHandle}",
                 url: "${url}",
                 validResponseCodes: validResponseCodes

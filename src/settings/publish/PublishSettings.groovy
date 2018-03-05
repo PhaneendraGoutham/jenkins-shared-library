@@ -5,7 +5,9 @@ import settings.Settings
 import settings.publish.types.PublishCompiled
 import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishNodejs
+import settings.publish.types.PublishSqlPackages
 import settings.publish.types.PublishWebServices
+import settings.publish.types.PublishWindowsServices
 
 class PublishSettings extends Settings {
     private Map _publish
@@ -51,12 +53,26 @@ class PublishSettings extends Settings {
                     )
                     publishNodejs.publish()
                     break
+                case PublishArtifactType.SQLPACKAGES:
+                    PublishSqlPackages publishSqlPackages = new PublishSqlPackages(
+                        _steps,
+                        publishItem
+                    )
+                    publishSqlPackages.publish()
+                    break
                 case PublishArtifactType.WEBSERVICES:
                     PublishWebServices publishWebServices = new PublishWebServices(
                         _steps,
                         publishItem
                     )
                     publishWebServices.publish()
+                    break
+                case PublishArtifactType.WINDOWSSERVICES:
+                    PublishWindowsServices publishWindowsServices = new PublishWindowsServices(
+                        _steps,
+                        publishItem
+                    )
+                    publishWindowsServices.publish()
                     break
                 default:
                     throw "Publish artifact type [${publishItem.publishArtifactType}] not supported."
