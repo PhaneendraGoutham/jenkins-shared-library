@@ -101,7 +101,7 @@ class TestFramework implements Serializable {
             }
 
             if (option == NUnitConstants.RESULT) {
-                String pathname = "${_origin}\\${_testTool}".toLowerCase()
+                String pathname = new File("${_origin}", "${_testTool}").absolutePath.toLowerCase()
                 File resultDirectory = new File("${pathname}")
                 resultDirectory.mkdirs()
                 _result = "${resultDirectory.getAbsolutePath()}\\${value}"

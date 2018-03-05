@@ -13,7 +13,7 @@ class PublishNodejs extends PublishType {
 
     @Override
     void bundle() {
-        final File outputPath = new File("${origin}\\${publishItem.name}")
+        final File outputPath = new File("${origin}", "${publishItem.name}")
         outputPath.mkdirs()
 
         Map<String, String> parameters = [
@@ -31,10 +31,10 @@ class PublishNodejs extends PublishType {
 
         _steps.retry(5) {
             try {
-                File publishproj = new File("${_steps.env.WORKSPACE}\\${publishItem.include}")
+                File publishproj = new File("${_steps.env.WORKSPACE}", "${publishItem.include}")
                 String parent = publishproj.getParent()
                 _steps.dir(parent) {
-                    File node_modules = new File("${parent}\\node_modules")
+                    File node_modules = new File("${parent}", "node_modules")
                     if (node_modules.isDirectory()) {
                         node_modules.deleteDir()
                     }

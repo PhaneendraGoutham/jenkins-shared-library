@@ -7,7 +7,7 @@ import settings.publish.PublishItem
 abstract class PublishType extends Settings {
     PublishType(def steps,
                 PublishItem publishItem) {
-        super (steps)
+        super(steps)
         this.publishItem = publishItem
     }
 
@@ -43,7 +43,7 @@ abstract class PublishType extends Settings {
         String pathname = "${_steps.pipelineSettings.workspaceSettings.artifactsWorkspace}\\zip"
         File zipDirectory = new File("${pathname}")
         zipDirectory.mkdirs()
-        publishItem.zipFile = new File("${zipDirectory.getAbsolutePath()}\\${publishItem.name}-${_steps.pipelineSettings.gitSettings.version}.zip")
+        publishItem.zipFile = new File("${zipDirectory.getAbsolutePath()}", "${publishItem.name}-${_steps.pipelineSettings.gitSettings.version}.zip")
     }
 
     void zip() {

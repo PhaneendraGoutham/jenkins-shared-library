@@ -15,7 +15,7 @@ class Notify {
             )
             new File("${pathname}").mkdirs()
 
-            def file = new File("${pathname}\\${steps.pipelineSettings.gitSettings.branch}.complete")
+            def file = new File("${pathname}", "${steps.pipelineSettings.gitSettings.branch}.complete")
             file.write("${steps.pipelineSettings.gitSettings.version}")
         } catch (error) {
             steps.echo "${error.message}"

@@ -26,7 +26,7 @@ class PublishFilesets extends PublishType {
                     continue
                 }
 
-                final File filesetDirectory = new File("${origin}\\${publishItem.name}")
+                final File filesetDirectory = new File("${origin}", "${publishItem.name}")
                 filesetDirectory.mkdirs()
                 FileUtils.copyFileToDirectory(file, filesetDirectory)
                 _steps.echo "Copied fileset [${fileset}] item [${item}] to [${filesetDirectory.getAbsolutePath()}]."

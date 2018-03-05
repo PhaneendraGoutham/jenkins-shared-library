@@ -12,7 +12,7 @@ class PublishWebServices extends PublishType {
 
     @Override
     void bundle() {
-        final File outputPath = new File("${origin}\\${publishItem.name}")
+        final File outputPath = new File("${origin}", "${publishItem.name}")
         outputPath.mkdirs()
 
         Map<String, String> parameters = [

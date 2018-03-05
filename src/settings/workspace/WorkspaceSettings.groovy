@@ -39,7 +39,7 @@ class WorkspaceSettings extends Settings {
                 for (def name in branchDirectories) {
                     if (name.startsWith(branch)) {
                         _steps.echo "Deleting custom workspace branch directory [${name}]."
-                        File branchDirectory = new File("${workspace}\\" + name)
+                        File branchDirectory = new File("${workspace}", "${name}")
                         branchDirectory.deleteDir()
                     }
                 }
