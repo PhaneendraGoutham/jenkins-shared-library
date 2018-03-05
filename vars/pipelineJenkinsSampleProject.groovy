@@ -52,32 +52,36 @@ def call(body) {
         }
 
         parameters {
-            choice(choices: "${jenkinsfile.parameters.configuration}",
-                description: 'Project/Solution build configuration (e.g. Debug, Release).',
+            choice(choices: "${jenkinsfile.parameters.configuration.choices}",
+                description: "${jenkinsfile.parameters.configuration.description}",
                 name: 'configuration'
             )
-            choice(choices: "${jenkinsfile.parameters.platform}",
-                description: 'Project/Solution build platform (e.g. Any CPU, x86).',
+            choice(choices: "${jenkinsfile.parameters.platform.choices}",
+                description: "${jenkinsfile.parameters.platform.description}",
                 name: 'platform'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.nupkg,
-                description: 'Publish nupkg defined in Jenkinsfile (build.nuget.projects).',
+            booleanParam(defaultValue: jenkinsfile.parameters.nupkg.defaultValue,
+                description: "${jenkinsfile.parameters.nupkg.description}",
                 name: 'nupkg'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.collections,
-                description: 'Publish collections defined in Jenkinsfile (build.artifacts.publish.collections).',
-                name: 'collections'
+            booleanParam(defaultValue: jenkinsfile.parameters.compiled.defaultValue,
+                description: "${jenkinsfile.parameters.compiled.description}",
+                name: 'compiled'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.filesets,
-                description: 'Publish filesets defined in Jenkinsfile (build.artifacts.publish.filesets).',
+            booleanParam(defaultValue: jenkinsfile.parameters.filesets.defaultValue,
+                description: "${jenkinsfile.parameters.filesets.description}",
                 name: 'filesets'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.webservices,
-                description: 'Publish webservices defined in Jenkinsfile (build.artifacts.publish.webservices).',
+            booleanParam(defaultValue: jenkinsfile.parameters.webservices.defaultValue,
+                description: "${jenkinsfile.parameters.webservices.description}",
                 name: 'webservices'
             )
-            booleanParam(defaultValue: jenkinsfile.parameters.downstream,
-                description: 'Run downstream job(s) defined in Jenkinsfile (downstream.jobs).',
+            booleanParam(defaultValue: jenkinsfile.parameters.deploy.defaultValue,
+                description: "${jenkinsfile.parameters.deploy.description}",
+                name: 'deploy'
+            )
+            booleanParam(defaultValue: jenkinsfile.parameters.downstream.defaultValue,
+                description: "${jenkinsfile.parameters.downstream.description}",
                 name: 'downstream'
             )
         }
@@ -250,13 +254,13 @@ def call(body) {
                     expression {
                         return currentBuild.result == PipelineConstants.SUCCESS &&
                             BRANCH_NAME ==~ "${jenkinsfile.directives.when.publish.branch}" &&
-                            (params.collections || params.filesets || params.webservices)
+                            (params.compiled || params.filesets || params.webservices)
                     }
                 }
                 steps {
                     script {
                         Map<PublishArtifactType, Boolean> publishParams = [:]
-                        publishParams.put(PublishArtifactType.COLLECTIONS, params.collections)
+                        publishParams.put(PublishArtifactType.COMPILED, params.compiled)
                         publishParams.put(PublishArtifactType.FILESETS, params.filesets)
                         publishParams.put(PublishArtifactType.WEBSERVICES, params.webservices)
 

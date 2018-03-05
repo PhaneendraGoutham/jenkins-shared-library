@@ -2,7 +2,7 @@ package settings.publish
 
 import constants.ToolConstants
 import settings.Settings
-import settings.publish.types.PublishCollections
+import settings.publish.types.PublishCompiled
 import settings.publish.types.PublishFilesets
 import settings.publish.types.PublishNodejs
 import settings.publish.types.PublishWebServices
@@ -30,12 +30,12 @@ class PublishSettings extends Settings {
     void publish() {
         for (PublishItem publishItem in publishItems) {
             switch (publishItem.publishArtifactType) {
-                case PublishArtifactType.COLLECTIONS:
-                    PublishCollections publishCollections = new PublishCollections(
+                case PublishArtifactType.COMPILED:
+                    PublishCompiled publishCompiled = new PublishCompiled(
                         _steps,
                         publishItem
                     )
-                    publishCollections.publish()
+                    publishCompiled.publish()
                     break
                 case PublishArtifactType.FILESETS:
                     PublishFilesets publishFilesets = new PublishFilesets(

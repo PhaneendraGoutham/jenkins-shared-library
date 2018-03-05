@@ -1,7 +1,7 @@
 package settings.publish
 
 enum PublishArtifactType {
-    COLLECTIONS,
+    COMPILED,
     FILESETS,
     NODEJS,
     WEBSERVICES
