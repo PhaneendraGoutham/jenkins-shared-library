@@ -48,7 +48,7 @@ abstract class PublishType extends Settings {
 
     void zip() {
         _steps.zip dir: "${origin}\\${publishItem.name}",
-            glob: '*',
+            glob: '',
             zipFile: publishItem.zipFile.getAbsolutePath()
     }
 
