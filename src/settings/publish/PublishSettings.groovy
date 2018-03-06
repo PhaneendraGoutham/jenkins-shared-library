@@ -88,6 +88,10 @@ class PublishSettings extends Settings {
             }
 
             String repository = publishItem.repository
+            if (!repository?.trim()) {
+                continue
+            }
+
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 

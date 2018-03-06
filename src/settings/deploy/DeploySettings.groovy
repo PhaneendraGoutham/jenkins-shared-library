@@ -2,6 +2,7 @@ package settings.deploy
 
 import settings.Settings
 import settings.deploy.engines.SaltStack
+import settings.deploy.engines.SqlPackage
 
 class DeploySettings extends Settings {
     private Map _deploy
@@ -28,6 +29,13 @@ class DeploySettings extends Settings {
                         deployItem
                     )
                     saltStack.deploy()
+                    break
+                case DeployEngineType.SQLPACKAGE:
+                    SqlPackage sqlPackage = new SqlPackage(
+                        _steps,
+                        deployItem
+                    )
+                    sqlPackage.deploy()
                     break
                 default:
                     throw "Deploy engine [${deployItem.deployEngineType}] not supported."

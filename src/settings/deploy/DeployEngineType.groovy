@@ -1,5 +1,6 @@
 package settings.deploy
 
 enum DeployEngineType {
-    SALTSTACK
+    SALTSTACK,
+    SQLPACKAGE
 }

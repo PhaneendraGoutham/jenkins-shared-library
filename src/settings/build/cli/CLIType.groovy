@@ -1,5 +1,6 @@
 package settings.build.cli
 
 enum CLIType {
-    MSBUILD
+    MSBUILD,
+    NGBUILD
 }

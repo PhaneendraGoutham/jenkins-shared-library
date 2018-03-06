@@ -34,13 +34,13 @@ class PublishWebServices extends PublishType {
             parameters
         )
         msBuildCLISettings.create()
-        msBuildCLISettings.run()
+        msBuildCLISettings.compile()
     }
 
     @Override
     void zip() {
         _steps.zip dir: "${origin}\\${publishItem.name}\\_PublishedWebsites\\${publishItem.name}_Package",
-            glob: '*',
+            glob: '',
             zipFile: publishItem.zipFile.getAbsolutePath()
     }
 }

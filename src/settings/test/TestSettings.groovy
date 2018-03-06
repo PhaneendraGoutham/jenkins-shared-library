@@ -24,13 +24,9 @@ class TestSettings extends Settings {
             _testFrameworkResults.add(testFramework.result)
         }
 
-        _testFrameworkResults.each { result ->
-            if (!result) {
-                return false
-            }
+        _testFrameworkResults.inject { p, q ->
+            return p && q
         }
-
-        return true
     }
 
     private void populate() {

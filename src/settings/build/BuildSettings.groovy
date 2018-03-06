@@ -4,6 +4,7 @@ import settings.Settings
 import settings.build.cli.CLISettings
 import settings.build.cli.CLIType
 import settings.build.cli.msbuild.MSBuildCLISettings
+import settings.build.cli.ngbuild.NGBuildCLISettings
 
 class BuildSettings extends Settings {
     private List<Map> _projects
@@ -28,7 +29,7 @@ class BuildSettings extends Settings {
                 _steps.pipelineSettings.nuGetSettings.restore("${msBuildCLISettings.file}")
             }
 
-            cliSetting.run()
+            cliSetting.compile()
         }
     }
 
@@ -47,6 +48,15 @@ class BuildSettings extends Settings {
                     msBuildCLISettings.create()
                     cliSettings.add(msBuildCLISettings)
                     break
+                case CLIType.NGBUILD:
+                    NGBuildCLISettings ngBuildCLISettings = new NGBuildCLISettings(
+                        _steps,
+                        cliType,
+                        parameters
+                    )
+                    ngBuildCLISettings.create()
+                    cliSettings.add(ngBuildCLISettings)
+
             }
         }
     }

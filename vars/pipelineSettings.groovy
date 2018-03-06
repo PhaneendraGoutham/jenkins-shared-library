@@ -2,6 +2,7 @@ import settings.build.BuildSettings
 import settings.deploy.DeploySettings
 import settings.downstream.DownstreamSettings
 import settings.git.GitSettings
+import settings.git.ManagedGitSettings
 import settings.nexus.NexusSettings
 import settings.nuget.NuGetSettings
 import settings.publish.PublishSettings
@@ -15,6 +16,10 @@ WorkspaceSettings getWorkspaceSettings() {
 
 GitSettings getGitSettings() {
     gitSettings
+}
+
+ManagedGitSettings getManagedGitSettings() {
+    managedGitSettings
 }
 
 VcsSettings getVcsSettings() {

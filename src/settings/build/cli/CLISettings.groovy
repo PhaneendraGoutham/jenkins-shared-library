@@ -24,7 +24,15 @@ abstract class CLISettings extends Settings {
 
     abstract String getArgs()
 
-    void run() {
+    void compile() {
+        prebuild()
+        build()
+        postbuild()
+    }
+
+    void prebuild() {}
+
+    void build() {
         try {
             _steps.bat "attrib -r ${_steps.env.WORKSPACE}\\*.* /s"
             _steps.bat "${cliParameters.tool} ${cliParameters.args}"
@@ -33,10 +41,15 @@ abstract class CLISettings extends Settings {
         }
     }
 
+    void postbuild() {}
+
     void setTool() {
         switch (cliParameters.cliType) {
             case CLIType.MSBUILD:
                 cliParameters.tool = ToolConstants.MSBUILD
+                break
+            case CLIType.NGBUILD:
+                cliParameters.tool = ToolConstants.NGBUILD
                 break
         }
     }

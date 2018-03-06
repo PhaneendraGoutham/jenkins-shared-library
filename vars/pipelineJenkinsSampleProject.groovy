@@ -98,7 +98,7 @@ def call(body) {
                             this,
                             !jenkinsfile.semver
                                 ? ''
-                                : "${jenkinsfile.semver.gitVersion}"
+                                : "${jenkinsfile.semver.gitversion}"
                         )
                         pipelineSettings.gitSettings.create()
 

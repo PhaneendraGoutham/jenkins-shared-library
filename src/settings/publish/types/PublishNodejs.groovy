@@ -29,19 +29,24 @@ class PublishNodejs extends PublishType {
             extra    : publishItem.extra
         ]
 
-        _steps.retry(5) {
-            try {
-                File publishproj = new File("${_steps.env.WORKSPACE}", "${publishItem.include}")
-                String parent = publishproj.getParent()
-                _steps.dir(parent) {
-                    File node_modules = new File("${parent}", "node_modules")
-                    if (node_modules.isDirectory()) {
-                        node_modules.deleteDir()
+        File publishproj = new File("${_steps.env.WORKSPACE}", "${publishItem.include}")
+        String parent = publishproj.getParent()
+        _steps.dir(parent) {
+            File node_modules = new File("${parent}", "node_modules")
+            if (node_modules.exists()) {
+                _steps.echo "Prerequisite node_modules has already been installed."
+            } else {
+                _steps.retry(5) {
+                    try {
+                        if (node_modules.isDirectory()) {
+                            node_modules.deleteDir()
+                        }
+                        _steps.bat "${ToolConstants.NPM} install"
+                    } catch (error) {
+                        throw error
                     }
-                    _steps.bat "${ToolConstants.NPM} install"
                 }
-            } catch (error) {
-                throw error
+
             }
         }
 
@@ -51,13 +56,13 @@ class PublishNodejs extends PublishType {
             parameters
         )
         msBuildCLISettings.create()
-        msBuildCLISettings.run()
+        msBuildCLISettings.compile()
     }
 
     @Override
     void zip() {
         _steps.zip dir: "${origin}\\${publishItem.name}\\_PublishedWebsites\\${publishItem.name}_Package",
-            glob: '*',
+            glob: '',
             zipFile: publishItem.zipFile.getAbsolutePath()
     }
 }

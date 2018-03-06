@@ -23,6 +23,7 @@ class WorkspaceSettings extends Settings {
 
     String customWorkspace
     String artifactsWorkspace
+    String branch
 
     void clean() {
         if (!_steps.currentBuild.currentResult == PipelineConstants.SUCCESS ||
@@ -30,14 +31,13 @@ class WorkspaceSettings extends Settings {
             _steps.echo "Not cleaning workspaces as result is [${_steps.currentBuild.currentResult}]."
         }
 
-        String branch = _steps.pipelineSettings.gitSettings.branch
         String workspace = customWorkspace - branch
         try {
             _steps.steps.dir(workspace) {
                 File workspaceDirectory = new File("${workspace}")
                 String[] branchDirectories = workspaceDirectory.list()
                 for (def name in branchDirectories) {
-                    if (name.startsWith(branch)) {
+                    if (name.startsWith("${branch}")) {
                         _steps.echo "Deleting custom workspace branch directory [${name}]."
                         File branchDirectory = new File("${workspace}", "${name}")
                         branchDirectory.deleteDir()
@@ -58,6 +58,7 @@ class WorkspaceSettings extends Settings {
 
     @Override
     protected void init() {
+        branch = getBranchName()
         customWorkspace = sprintf(
             '%1$s:\\%2$s\\%3$s\\%4$s',
             [
@@ -69,7 +70,7 @@ class WorkspaceSettings extends Settings {
                     .split('/')
                     .last()
                     .replaceAll('.git', ''),
-                getBranchName()
+                branch
             ])
 
         artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote("${_root}"), "tmp")

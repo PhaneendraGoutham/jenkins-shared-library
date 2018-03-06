@@ -63,7 +63,7 @@ class TestFramework implements Serializable {
                         keepJUnitReports: true,
                         skipJUnitArchiver: false,
                         testResultsPattern: "/nunit/*.xml"
-                    result = false
+                    result = _status == 0
                     break
                 default:
                     throw "Tool not defined for [${_testTool}]."
