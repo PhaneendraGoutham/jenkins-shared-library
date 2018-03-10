@@ -1,5 +1,6 @@
 package settings.publish
 
+import constants.GitFlowConstants
 import constants.ToolConstants
 import settings.Settings
 import settings.publish.types.PublishCompiled
@@ -96,15 +97,35 @@ class PublishSettings extends Settings {
             String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
 
             String zipFileName = publishItem.zipFile.getName()
-            publishItem.artifactUrl = sprintf(
-                '%1$s/%2$s/%3$s/%4$s/%5$s',
-                [
-                    url,
-                    _steps.pipelineSettings.gitSettings.repository,
-                    _steps.pipelineSettings.gitSettings.version,
-                    _steps.pipelineSettings.gitSettings.commit,
-                    zipFileName
-                ])
+            String artifactUrl
+            switch (_steps.pipelineSettings.gitSettings.branch) {
+                case [GitFlowConstants.DEVELOP, GitFlowConstants.MASTER]:
+                    artifactUrl = sprintf(
+                        '%1$s/%2$s/%3$s/%4$s/%5$s/%6$s',
+                        [
+                            url,
+                            _steps.pipelineSettings.gitSettings.repository,
+                            _steps.pipelineSettings.gitSettings.branch,
+                            _steps.pipelineSettings.gitSettings.version,
+                            _steps.pipelineSettings.gitSettings.commit,
+                            zipFileName
+                        ])
+                    break
+                default:
+                    artifactUrl = sprintf(
+                        '%1$s/%2$s/%3$s/%4$s/%5$s/%6$s/%7$s',
+                        [
+                            url,
+                            _steps.pipelineSettings.gitSettings.repository,
+                            _steps.pipelineSettings.gitSettings.branch,
+                            _steps.pipelineSettings.workspaceSettings.branch,
+                            _steps.pipelineSettings.gitSettings.version,
+                            _steps.pipelineSettings.gitSettings.commit,
+                            zipFileName
+                        ])
+                    break
+            }
+            publishItem.artifactUrl = artifactUrl
 
             _steps.withCredentials([
                 _steps.usernameColonPassword(
