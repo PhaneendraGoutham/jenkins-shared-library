@@ -93,8 +93,9 @@ class PublishSettings extends Settings {
                 continue
             }
 
+            String branch = _steps.pipelineSettings.gitSettings.branch
             String id = _steps.pipelineSettings.nexusSettings.repositories[repository]['id']
-            String url = _steps.pipelineSettings.nexusSettings.repositories[repository]['raw']
+            String url = _steps.pipelineSettings.nexusSettings.repositories[repository][branch]
 
             String zipFileName = publishItem.zipFile.getName()
             String artifactUrl
