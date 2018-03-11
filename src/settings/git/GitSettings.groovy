@@ -47,15 +47,6 @@ class GitSettings extends Settings {
     }
 
     void setVersion() {
-        try {
-            def tool = ToolConstants.GIT
-            def args = 'fetch --all'
-            _steps.bat "${tool} ${args}"
-        } catch (error) {
-            _steps.currentBuild.result = PipelineConstants.FAILURE
-            throw error
-        }
-
         def output = "gitversion.json"
         def tool = ToolConstants.GITVERSION
         def args = sprintf(
