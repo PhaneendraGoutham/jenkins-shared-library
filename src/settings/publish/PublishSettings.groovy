@@ -102,10 +102,11 @@ class PublishSettings extends Settings {
             switch (_steps.pipelineSettings.gitSettings.branch) {
                 case [GitFlowConstants.DEVELOP, GitFlowConstants.MASTER]:
                     artifactUrl = sprintf(
-                        '%1$s/%2$s/%3$s/%4$s/%5$s',
+                        '%1$s/%2$s/%3$s/%4$s/%5$s/%6$s',
                         [
                             url,
                             _steps.pipelineSettings.gitSettings.repository,
+                            _steps.pipelineSettings.gitSettings.branch,
                             _steps.pipelineSettings.gitSettings.version,
                             _steps.pipelineSettings.gitSettings.commit,
                             zipFileName
@@ -113,10 +114,11 @@ class PublishSettings extends Settings {
                     break
                 default:
                     artifactUrl = sprintf(
-                        '%1$s/%2$s/%3$s/%4$s/%5$s/%6$s',
+                        '%1$s/%2$s/%3$s/%4$s/%5$s/%6$s/%7$s',
                         [
                             url,
                             _steps.pipelineSettings.gitSettings.repository,
+                            _steps.pipelineSettings.gitSettings.branch,
                             _steps.pipelineSettings.workspaceSettings.branch,
                             _steps.pipelineSettings.gitSettings.version,
                             _steps.pipelineSettings.gitSettings.commit,
