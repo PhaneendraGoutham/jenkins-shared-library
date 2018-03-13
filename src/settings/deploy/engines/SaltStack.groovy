@@ -95,7 +95,7 @@ class SaltStack extends DeployEngine {
                         'rm -f %1$s/%2$s',
                         [
                             _data,
-                            publishItem.zipFile.getName()
+                            publishItem.zipFile.getName().replace("${_steps.pipelineSettings.gitSettings.version}", "*")
                         ]
                     )
                 ]
