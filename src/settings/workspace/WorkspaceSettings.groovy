@@ -73,7 +73,7 @@ class WorkspaceSettings extends Settings {
                 branch
             ])
 
-        artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote("${_root}"), "tmp")
+        artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote('src'), 'out')
         File artifactsWorkspaceDirectory = new File("${artifactsWorkspace}")
         if (artifactsWorkspaceDirectory.exists() && artifactsWorkspaceDirectory.isDirectory()) {
             artifactsWorkspaceDirectory.deleteDir()
