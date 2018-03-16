@@ -7,6 +7,8 @@ import settings.Settings
 import java.util.regex.Pattern
 
 class WorkspaceSettings extends Settings {
+    private static final String SRC = 'src'
+    private static final String OUT = 'out'
     private String _drive
     private String _root
     private String _leaf
@@ -60,10 +62,11 @@ class WorkspaceSettings extends Settings {
     protected void init() {
         branch = getBranchName()
         customWorkspace = sprintf(
-            '%1$s:\\%2$s\\%3$s\\%4$s',
+            '%1$s:\\%2$s\\%3$s\\%4$s\\%5$s',
             [
                 "${_drive}",
                 "${_root}",
+                "${SRC}",
                 "${_leaf}"?.trim()
                     ? "${_leaf}"
                     : _steps.scm.getUserRemoteConfigs()[0].getUrl()
@@ -73,7 +76,7 @@ class WorkspaceSettings extends Settings {
                 branch
             ])
 
-        artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote('src'), 'out')
+        artifactsWorkspace = customWorkspace.replaceFirst(Pattern.quote("${SRC}"), "${OUT}")
         File artifactsWorkspaceDirectory = new File("${artifactsWorkspace}")
         if (artifactsWorkspaceDirectory.exists() && artifactsWorkspaceDirectory.isDirectory()) {
             artifactsWorkspaceDirectory.deleteDir()
