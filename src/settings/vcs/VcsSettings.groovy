@@ -105,14 +105,17 @@ class VcsSettings extends Settings {
 
         try {
             _steps.withCredentials([
-                _steps.usernameColonPassword(
+                _steps.usernamePassword(
                     credentialsId: "${_id}",
-                    variable: 'tagCredentials')]) {
+                    passwordVariable: 'tagPassword',
+                    usernameVariable: 'tagUsername')]) {
+                def url = _steps.pipelineSettings.gitSettings.url
                 def push = sprintf(
-                    'push https://%1$s@%2$s --tags',
+                    'push https://%1$s:%2$s@%3$s --tags',
                     [
-                        _steps.env.tagCredentials,
-                        "${_steps.pipelineSettings.gitSettings.url}".replace("https://", "")
+                        _steps.env.tagUsername,
+                        _steps.env.tagPassword,
+                        "${url}".substring("${url}".lastIndexOf("@") + 1)
                     ])
                 _steps.bat "${tool} ${push}"
             }

@@ -2,7 +2,7 @@ package constants
 
 class ToolConstants {
     // bin
-    static final String BIN = 'd:\\bin\\'
+    static final String BIN = 'd:\\usr\\bin\\'
     static final String GITVERSION = BIN + 'gitversion\\gitversion.exe'
     static final String NGBUILD = BIN + 'npm\\ng.cmd'
     static final String NUGET = BIN + 'nuget\\nuget.exe'
